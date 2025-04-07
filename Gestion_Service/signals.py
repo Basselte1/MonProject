@@ -6,7 +6,9 @@ from django.core.mail import send_mail
 import logging
 from .models import DemandeService
 
-logger = logging.getLogger(__name__)
+#__name__ :filtrer les logs (ex. : n'afficher que les erreurs venant de ce module "app.signals").
+
+logger = logging.getLogger(__name__) # crée un logger avec le nom du module.
 
 @receiver(post_save, sender=DemandeService)
 def notifier_admin_nouvelle_demande(sender, instance, created, **kwargs):

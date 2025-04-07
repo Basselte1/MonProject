@@ -1,14 +1,12 @@
-import gc
+
 import logging
 import os
 
-
-from MySQLdb.constants.FIELD_TYPE import DECIMAL
 from django.core.files.base import ContentFile
 from django.db import models
 from django.template.loader import render_to_string
 
-from django.templatetags.static import static
+
 from django.utils.timezone import now
 from weasyprint import HTML, CSS
 
@@ -18,8 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 # mes class => tables de ma BD
-
-
 ################################################## #####################################
 
 # ✅ Modèle Catégorie
@@ -57,10 +53,9 @@ class Service(models.Model):
         return self.nom
 
     def get_absolute_url(self):
-
         return reverse('home')
     
-#######################################################################
+###############################################################################################################
 
 from utilisateurs.models import User
 
@@ -93,7 +88,7 @@ class DemandeService(models.Model):
     def __str__(self):
         return f"Demande {self.pk} - {self.statut}"
     
-############################################################################
+###########################################################################################################################
 # model devis
 from django.core.files.storage import FileSystemStorage
 from decimal import Decimal
@@ -114,7 +109,7 @@ class Devis(models.Model):
     # Champs pour les détails de la prestation
     description = models.TextField(default="")  # Ex: "Développement d'application web avec Django et React"
 
-    validite = models.DateField(auto_now=True)  #
+    validite = models.IntegerField(default=10,help_text="en jours") #
 
 
     cout_backend = models.DecimalField(max_digits=15, decimal_places=2, default=0, validators=[MinValueValidator(0)])
@@ -188,7 +183,7 @@ class Facture(models.Model):
 
     quantite = models.IntegerField(default=10,help_text="en jours")  # nombre de temps pour rendre le service
 
-    invoice_type = models.CharField(max_length=15,default='FACTURE',  help_text='type_document')
+    invoice_type = models.CharField(max_length=15,default='FACTURE',  help_text='type_document') # A SUPPRIMER LORS DE ;A DERNIERE VERIFICATION
 
     fichier_pdf = models.FileField(upload_to='factures/', blank=True, null=True)  # Stocke le fichier PDF
 
@@ -241,7 +236,7 @@ class Facture(models.Model):
         """Générer un fichier PDF pour la facture."""
 
         # On suppose que 'self' est l'instance de la facture
-        client = self.get_client()  # Assure-toi que 'get_client' existe dans ton modèle Facture
+        client = self.get_client()  #'get_client' existe dans ton modèle Facture
 
 
         context = {
@@ -270,17 +265,17 @@ class Facture(models.Model):
         }
 
         try:
-            # Charger le template HTML et passer le contexte
+            # render_to_string: charge le template HTML 'facture_template.html' et y injecte les données du context
             html_string = render_to_string('facture_template.html', context)
 
             print("🧐 Contexte envoyé au template:", context)
 
-            print("🔎 HTML généré avant PDF:\n", html_string)
+            print("🔎 HTML généré avait PDF:\n", html_string)
 
             # Vérifier que le fichier CSS existe
             css_path = os.path.join(settings.BASE_DIR, 'static/css/facture.css')
 
-            # verifier si le fichier existe
+            # Vérifie l'existence du fichier CSS nécessaire pour la mise en page du PDF
             if not os.path.exists(css_path):
                 print("⚠️ Le fichier CSS est introuvable")
                 return False  # Échec de la génération du PDF
@@ -288,7 +283,7 @@ class Facture(models.Model):
             from django.templatetags.static import static
 
 
-            # Générer le PDF à partir du HTML en incluant le css
+            # write_pdf: Générer le PDF à partir du HTML en incluant le css
             pdf_file = HTML(string=html_string).write_pdf(stylesheets=[CSS(css_path)])
 
             # Nom du fichier PDF
@@ -303,11 +298,11 @@ class Facture(models.Model):
 
                 # Sauvegarder le fichier PDF
             self.fichier_pdf.save(filename, ContentFile(bytes(pdf_file)), save=False)
-            self.save()
+            self.save() # évite une double sauvegarde
             return True  # Succès de la génération
 
         except Exception as e:
-            import traceback
+            import traceback #informations détaillées sur les erreurs (stack trace) lors de la génération du PDF.
             print("❌ Erreur lors de la génération du PDF :", str(e))
             print(traceback.format_exc())
 
