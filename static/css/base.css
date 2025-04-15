@@ -1,84 +1,4 @@
  /* Styles de base */
- body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica, sans-serif ;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    color: #000;
-    background-color: #e7e3e3;
-    overflow: auto;
-    height: auto;
-}
-
-/* En-tête */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 10px;
-    width: 100%;
-    height: 50px;
-    background-color:#ffffff; /* Couleur principale professionnelle  #007bff */
-    box-shadow: 0 5px 7px rgba(0, 0, 0, 0.1);
-
-}
-/* Logo
-.logo {
-    font-size: 1.5em;
-    font-weight: bold;
-
-}*/
-
-
-/* Navigation */
-nav {
-    display: flex;
-    gap: 20px;
-}
-
-nav a {
-    text-decoration: none;
-    color: #000;
-    font-weight: bold;
-    font-size: 20px;
-    transition: color 0.1s, transform 0.1s;
-}
-
-nav a:hover {
-    background-color: #c0c1c2;
-    transform: scale(1.1);
-}
-.dropdown {
-    position: relative;
-    display: inline-block;
-    margin-left: -8px;
-
-}
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f0f0f0;
-    min-width: 160px;
-    box-shadow: 0 2px 3px rgba(0,0,0,0.2);
-    z-index: 1;
-
-}
-.dropdown-content a {
-    color: rgb(0, 0, 0);
-    padding: 10px 14px;
-    text-decoration: none;
-    display: block;
-    font-weight: bold;
-}
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-
-}
-.dropdown:hover .dropdown-content {
-    display: block;
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -165,30 +85,6 @@ footer {
     bottom: 0;
     width: 100%;
 
-}
-.buttons {
-    display: flex;
-    gap: 10px;
-    margin-right: 15px;
-}
-.buttons a {
-    color:  #000;
-     text-decoration: none;
-}
-button {
-    background-color: #83aae1; /* bleue */
-    border: none;
-    padding: 10px 15px;
-    margin-top: -25x;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 5px;
-    color:  #007bff;
-    transition: background-color 0.2s;
-}
-button:hover {
-    background-color: #9fc4e8; /* Rouge foncé */
 }
 main {
     flex: 1;
