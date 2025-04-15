@@ -1,4 +1,5 @@
-
+# protocole de securiter qui permet de chiffrer les communications entre le serveur de messagerie
+# et client de messagerie
 
 EMAIL_USE_TLS = True # ativation de la securite TLS
 EMAIL_HOST = 'smtp.gmail.com' # serveur SMTP de mon fournisseur : GMAIL

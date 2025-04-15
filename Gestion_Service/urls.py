@@ -29,5 +29,7 @@ urlpatterns = [
     path('facture/<str:statut>/', voir_facture, name='voir_facture'),
     path('facture/<int:facture_id>/download/', telecharger_facture, name='telecharger_facture'),
 
+    #path('map/', carte_vue, name='map'),
+
 
 ]

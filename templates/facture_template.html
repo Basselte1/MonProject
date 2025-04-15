@@ -2,62 +2,165 @@
 {% load static %}
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/facture.css' %}">
-    <title>Facture</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facture</title>
+  <link rel="stylesheet" href="{% static 'css/facture.css' %}">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .invoice {
+      background: #fff;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 40px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .logo img {
+      max-width: 180px;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 2.5em;
+      color: #2c3e50;
+    }
+
+    .PART {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      gap: 50px;
+    }
+
+    .details {
+      flex: 1;
+    }
+
+    .details strong {
+      color: #2c3e50;
+    }
+
+    .details div {
+      margin-bottom: 5px;
+    }
+
+    table.items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .items-table th, .items-table td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    .items-table th {
+      background-color: #2c3e50;
+      color: white;
+      font-weight: 600;
+    }
+
+    .items-table tr:nth-child(even) {
+      background-color: #f4f6f8;
+    }
+
+    .conditions {
+      margin-top: 30px;
+      font-size: 1em;
+      background-color: #f4f6f8;
+      padding: 15px;
+      border-left: 5px solid #2c3e50;
+    }
+
+    .conditions div {
+      margin: 5px 0;
+    }
+
+    .footer {
+      text-align: right;
+      margin-top: 40px;
+      font-size: 0.95em;
+      color: #666;
+    }
+
+    .footer div {
+      margin-bottom: 8px;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="invoice">
-        <div class="logo">
-            <img src="file:///C:/Users/JEEL/PycharmProjects/MonProject/media/images/logo jeoline.PNG" alt="Logo" width="30%">
-        </div>
-        <div class="header">
-            <h1>FACTURE</h1>
-        </div>
-        <div class="details">
-            <div><strong> Jeoline Corporates</strong></div>
-            <div> 264 Rue de la Motte-Picquet Bonanjo, Douala, CAMEROUN</div>
-            <div>Douala, CAMEROUN, 264 Rue de la Motte-Picquet Bonanjo</div>
-            <div> +237 652 21 41 51</div>
-            <div> contact@jeolinecorporates.com</div>
-            <br>
-        </div>
-        <br>
-        <div class="details">
-            <div><strong>client</strong></div>
-            <div>{{ client_nom }}</div>
-            <div>{{ client_adresse }}</div>
-            <div>{{ client_email }}</div>
-            <div>{{ client_telephone }}</div>
-        </div>
-       <table class="items-table">
-    <tr>
-        <th>DÉSCRIPTION</th>
-        <th>QUANTITÉ (heures)</th>
-        <th>PRIX</th>
-        <th>TOTAL HT</th>
-    </tr>
-    <tr>
+  <div class="invoice">
+    <div class="logo">
+      <img src="file:///C:/Users/JEEL/PycharmProjects/MonProject/media/images/logo jeoline.PNG" alt="Logo">
+    </div>
+
+    <div class="header">
+      <h1>FACTURE</h1>
+    </div>
+
+    <div class="PART">
+      <div class="details">
+        <div><strong>Jeoline Corporates</strong></div>
+        <div>264 Rue de la Motte-Picquet Bonanjo</div>
+        <div>Douala, CAMEROUN</div>
+        <div>+237 652 21 41 51</div>
+        <div>contact@jeolinecorporates.com</div>
+      </div>
+
+      <div class="details">
+        <div><strong>Client</strong></div>
+        <div>{{ client_nom }}</div>
+        <div>{{ client_adresse }}</div>
+        <div>{{ client_email }}</div>
+        <div>{{ client_telephone }}</div>
+      </div>
+    </div>
+
+    <table class="items-table">
+      <tr>
+        <th>Déscription</th>
+        <th>Quantité (heures)</th>
+        <th>Prix</th>
+        <th>Total HT</th>
+      </tr>
+      <tr>
         <td>{{ description }}</td>
         <td>{{ duree }}</td>
-        <td> / </td>
+        <td>/</td>
         <td>{{ total_ht }}</td>
-    </tr>
-</table>
+      </tr>
+    </table>
 
-        <div class="conditions">
-            <p><strong>Remarques / Instructions de paiement :</strong></p>
-            <div><strong>TOTAL HT</strong>: {{ total_ht }}</div>
-            <div><strong>TVA</strong>: {{ tva }}</div>
-            <div><strong>TTC</strong>: {{ total_ttc }}</div>
-        </div>
-        <div class="footer">
-            <div><strong>DATE</strong>: {{ date_creation }}</div>
-            <br>
-            <div><strong>N° DE FACTURE</strong>: {{ facture }}</div>
-            <p>Modalités de paiement (dû à réception, dû apres {{ validite }} )</p>
-        </div>
+    <div class="conditions">
+      <p><strong>Remarques / Instructions de paiement :</strong></p>
+      <div><strong>Total HT :</strong> {{ total_ht }}</div>
+      <div><strong>TVA :</strong> {{ tva }}</div>
+      <div><strong>Total TTC :</strong> {{ total_ttc }}</div>
     </div>
+
+    <div class="footer">
+      <div><strong>Date Creation :</strong> {{ date_creation }}</div>
+      <div><strong>Facture N° :</strong> {{ facture }}</div>
+      <p>invalide dans {{ validite }} jours</p>
+    </div>
+  </div>
 </body>
 </html>

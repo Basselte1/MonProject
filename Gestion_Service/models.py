@@ -163,31 +163,29 @@ class Devis(models.Model):
 
 ###############################################################
 
+from django.db import models
+from django.utils.timezone import now
+from decimal import Decimal
+from django.template.loader import render_to_string
+from weasyprint import HTML, CSS
+from django.core.files.base import ContentFile
+from django.conf import settings
+import os
+import traceback
+
 class Facture(models.Model):
-
     description = models.TextField(null=True, max_length=1000, blank=True)
-
     date_creation = models.DateField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True, null=True, blank=True)
+    validite = models.IntegerField(default=10,help_text="en jours")
+    devis = models.OneToOneField("Devis", on_delete=models.CASCADE, related_name="facture", null=True, blank=True)
 
-    validite = models.DateField(auto_now=True)  # LE delai de paiment
-
-    devis = models.OneToOneField(Devis, on_delete=models.CASCADE, related_name="facture", null=True, blank=True)
-
-    STATUT_CHOICES = [
-        ('PAYEE', 'Payée'),
-        ('IMPAYEE', 'Impayée'),
-        ('EN_ATTENTE', 'En attente'),
-    ]
+    STATUT_CHOICES = [('PAYEE', 'Payée'), ('IMPAYEE', 'Impayée'), ('EN_ATTENTE', 'En attente')]
     statut = models.CharField(max_length=10, choices=STATUT_CHOICES, default='EN_ATTENTE')
 
-    quantite = models.IntegerField(default=10,help_text="en jours")  # nombre de temps pour rendre le service
-
-    invoice_type = models.CharField(max_length=15,default='FACTURE',  help_text='type_document') # A SUPPRIMER LORS DE ;A DERNIERE VERIFICATION
-
-    fichier_pdf = models.FileField(upload_to='factures/', blank=True, null=True)  # Stocke le fichier PDF
-
-    numero_facture = models.CharField(max_length=20, unique=True, blank=True, null=True)  # Numéro de facture unique
+    quantite = models.IntegerField(default=10, help_text="en jours")
+    fichier_pdf = models.FileField(upload_to='factures/', blank=True, null=True)
+    numero_facture = models.CharField(max_length=20, unique=True, blank=True, null=True)
 
     class Meta:
         ordering = ['-date_creation']
@@ -195,116 +193,93 @@ class Facture(models.Model):
         verbose_name_plural = "Factures"
 
     def save(self, *args, **kwargs):
-        if not self.numero_facture:
-            # Génération avant sauvegarde
-            date_part = now().strftime("%Y%m%d")
-            self.numero_facture = f"FAC-{date_part}-{self.pk or 0:06d}"
+        try:
+            # 1. Sauvegarde initiale si pk n'existe pas
+            if not self.pk:
+                super().save(*args, **kwargs)
 
-        super().save(*args, **kwargs)
+            # 2. Génération du numéro de facture
+            if not self.numero_facture:
+                date_part = now().strftime("%Y%m%d")
+                self.numero_facture = f"FAC-{date_part}-{str(self.pk).zfill(6)}"
+
+            # 3. Sauvegarde finale avec numéro
+            super().save(*args, **kwargs)
+
+        except Exception as e:
+            print("Erreur lors de l'enregistrement de la facture:", e)
+            print(traceback.format_exc())
 
     def __str__(self):
-        return f"{self.numero_facture or self.pk} - {self.montant_ttc} FCFA"
+        try:
+            return f"{self.numero_facture or self.pk} - {self.montant_ttc} FCFA"
+        except:
+            return str(self.pk)
 
-        # ✅ Propriétés pour récupérer les valeurs du devis
     @property
     def montant_ht(self):
-            return self.devis.calcul_total_ht() if self.devis else Decimal("0.00")
+        return self.devis.calcul_total_ht() if self.devis else Decimal("0.00")
 
     @property
     def montant_tva(self):
-            return self.devis.calcul_tva() if self.devis else Decimal("0.00")
+        return self.devis.calcul_tva() if self.devis else Decimal("0.00")
 
     @property
     def montant_ttc(self):
-            return self.devis.calcul_total_ttc() if self.devis else Decimal("0.00")
+        return self.devis.calcul_total_ttc() if self.devis else Decimal("0.00")
 
     def get_client(self):
-        """Retourne le client via la relation Devis → DemandeService → Client"""
         if self.devis and self.devis.demande:
             return self.devis.demande.client
-        return None  # Evite les erreurs
+        return None
 
     def get_service(self):
-        """Retourne le service via la relation Devis → DemandeService → Service"""
         if self.devis and self.devis.demande:
             return self.devis.demande.service
-        return None  # Evite les erreurs
-
-############################################################################################
+        return None
 
     def generate_pdf(self):
-        """Générer un fichier PDF pour la facture."""
-
-        # On suppose que 'self' est l'instance de la facture
-        client = self.get_client()  #'get_client' existe dans ton modèle Facture
-
-
-        context = {
-            # Informations du client
-            "client_nom": client.username if client else "Inconnu",
-            "client_email": client.email if client else "inconnu@example.com",
-            "client_entreprise": getattr(client, "entreprise", "Nom entreprise non défini"),
-
-            #"client_entreprise": client.entreprise if client else "Nom entreprise non défini",
-
-            "client_adresse": client.adresse if client else "Pas d'adresse mentionnée",
-
-            # Informations de la facture
-            "validite": self.validite,
-            "description": self.description,
-            "duree": self.quantite,
-            "date_creation": self.date_creation,
-
-            # Coûts détaillés
-            "total_ht": self.montant_ht,
-            "tva": self.montant_tva,
-            "total_ttc": self.montant_ttc,
-
-            # Assurer que la facture actuelle est dans le contexte
-            "facture": self.numero_facture
-        }
-
         try:
-            # render_to_string: charge le template HTML 'facture_template.html' et y injecte les données du context
+            client = self.get_client()
+
+            context = {
+                "client_nom": getattr(client, "username", "Inconnu"),
+                "client_email": getattr(client, "email", "inconnu@example.com"),
+                "client_entreprise": getattr(client, "entreprise", "Nom entreprise non défini"),
+                "client_adresse": getattr(client, "adresse", "Pas d'adresse mentionnée"),
+                "validite": self.validite,
+                "description": self.description,
+                "duree": self.quantite,
+                "date_creation": self.date_creation,
+                "total_ht": self.montant_ht,
+                "tva": self.montant_tva,
+                "total_ttc": self.montant_ttc,
+                "facture": self.numero_facture
+            }
+
             html_string = render_to_string('facture_template.html', context)
-
-            print("🧐 Contexte envoyé au template:", context)
-
-            print("🔎 HTML généré avait PDF:\n", html_string)
-
-            # Vérifier que le fichier CSS existe
             css_path = os.path.join(settings.BASE_DIR, 'static/css/facture.css')
 
-            # Vérifie l'existence du fichier CSS nécessaire pour la mise en page du PDF
             if not os.path.exists(css_path):
                 print("⚠️ Le fichier CSS est introuvable")
-                return False  # Échec de la génération du PDF
-#########################################################################
-            from django.templatetags.static import static
+                return False
 
-
-            # write_pdf: Générer le PDF à partir du HTML en incluant le css
             pdf_file = HTML(string=html_string).write_pdf(stylesheets=[CSS(css_path)])
-
-            # Nom du fichier PDF
             filename = f"facture_{self.pk}.pdf"
 
-            # Supprimer l'ancienne version du fichier PDF s'il existe
             if self.fichier_pdf:
-                self.fichier_pdf.close() # ferme le fichier s'il est ouvert
-                self.fichier_pdf.delete(save=True)  # Supprime l'ancienne version et enregistre
+                self.fichier_pdf.close()
+                self.fichier_pdf.delete(save=True)
 
-                print(self.fichier_pdf ,"supprime")
-
-                # Sauvegarder le fichier PDF
-            self.fichier_pdf.save(filename, ContentFile(bytes(pdf_file)), save=False)
-            self.save() # évite une double sauvegarde
-            return True  # Succès de la génération
+            self.fichier_pdf.save(filename, ContentFile(pdf_file), save=False)
+            self.save()
+            return True
 
         except Exception as e:
-            import traceback #informations détaillées sur les erreurs (stack trace) lors de la génération du PDF.
             print("❌ Erreur lors de la génération du PDF :", str(e))
             print(traceback.format_exc())
+            return False  # L'application continue à fonctionner sans planter
+
 
 ####################################################################################
 

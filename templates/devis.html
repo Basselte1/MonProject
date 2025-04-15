@@ -1,55 +1,138 @@
-{% extends 'base.html' %}
 
-{% block title %}Demamde de Service{% endblock %} <!-- Définir un titre personnalisé -->
-
-{% block content %}
  <style>
-    .formulaire {
-        width: 100%;
-        max-width: 450px;
-        background: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        margin: 10px;
-        display: flex;
-        justify-content: center;
-    }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f7f7f7;
+    overflow:hidden;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
 
-    label {
-        font-weight: bold;
-        margin-bottom: 5px;
-        display: block;
-    }
+.container {
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #fff;
 
-    input, textarea, select, button {
-        width: 95%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 14px;
-    }
+}
 
-    input:focus, textarea:focus, select:focus {
-        border-color: #007bff;
-        outline: none;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-    }
+.contact-section, .image-section {
+    flex: 1 1 100%;
+    padding: 30px;
+}
 
-    button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-        transition: background 0.3s;
-    }
+.contact-section {
+    background-color: #fff;
+}
 
-    button:hover {
-        background-color: #0056b3;
-    }
+.image-section {
+    /*background: url("/media/images/demander-un-devis.jpg") no-repeat center center;
+    background-size: cover;
+    min-height: 300px;*/
+}
+
+.logo {
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: #2b2b2b;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #777;
+    font-size: 15px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    display:flex ;
+    justify-content:center;
+    align-items:center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color:#434343;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+    height: 120px;
+}
+
+button {
+    background-color: #673ab7;
+    color: white;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 80%;
+    margin-top:-10px;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: #5e35b1;
+}
+
+.bt {
+
+    margin-left:380px;
+    width:30%;
+}
+.btn-retour {
+        background:#323131;
+        border-radius:10px;
+        padding:10px;
+        color:#fff;
+        text-decoration:none;
+     }
+.btn-retour:hover {
+    background:#5a5a5a;
+}
+
+
+.section-first {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.section-first .form-group {
+    flex: 1 1 48%;
+}
+ .error {
+         color: red;
+         font-size: 14px;
+        }
+
+
+/************************************************************************************************************/
 
     /* Style de la boîte modale */
     .modal {
@@ -99,36 +182,137 @@
     .btn-success:hover {
         background-color: #218838;
     }
+    .bt-refuser {
+        background-color: #6c757d;
+        color: white;
+    }
+    .bt-refuser:hover {
+        background-color:#555f68;
+    }
+
+@media (max-width: 768px) {
+    .section-first {
+        flex-direction: column;
+    }
+
+    .section-first .form-group {
+        flex: 1 1 100%;
+    }
+
+    .image-section {
+        display: none;
+    }
+}
+
 </style>
+
+
+ <div class="container">
+
+    <div class="contact-section">
+
+        {% if not user.is_authenticated %}
+        <a href="{% url 'home' %}" class="btn-retour">Retour</a>
+
+         <h2>Effectuez votre demande </h2>
+        <p>Remplissez le formulaire ci-dessous et nous vous répondrons dans les brefs delai.</p>
+        {% else %}
+            <a href="{% url 'client_dashbord' %}" class="btn-retour">Retour</a>
+         <h2>Effectuez votre demande </h2>
+        {% endif %}
+
+
 
 <div class="formulaire">
     <form id="devis_form" action="{% url 'devis_form' %}" method="POST" enctype="multipart/form-data"> <!--gerer le chagement du fichier-->
         {% csrf_token %}
 
+    <div class="section-first">
+        <div class="form-group">
+      {% if not user.is_authenticated %}
+          <label for="username">Nom :</label>
+            <input type="text" id="username" name="username" placeholder="Votre Nom complet" required>
+         </div>
+
+        <div class="form-group">
+         <label for="email">Email :</label>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+         </div>
+    </div>
+        <div class="section-first">
+
+        <div class="form-group">
+        <label for="adresse">Adresse :</label>
+        <input type="text" id="adresse" name="adresse" placeholder="Votre Adresse complete" required>
+        </div>
+
+
+             <div class="form-group">
         <label for="service">Service demandé :</label>
-        <select name="service" id="service" required>
+        <select name="service" id="service" class="serv" required>
+            <option value=""></option>
             {% for service in services %}
+
         <option value="{{ service.id }}">{{ service.nom }}</option>
             {% endfor %}
         </select>
-
-        <label for="details">Informations pour la demande de devis & et description du Projet :</label>
-        <textarea name="details" id="details" cols="30" rows="5" placeholder="Décrivez au maximum vos besoins" required></textarea>
-
-        <label for="file"> associe un fichier</label>
-        <input type="file" name="fichier" id="file">
+             </div>
+        </div>
 
 
+         <div class="form-group">
+        <label for="details">Informations essentielles de votre Projet :</label>
+        <textarea name="details" id="details" cols="30" rows="5" placeholder="veillez entrez l'essentiel de votre besoin" required></textarea>
+
+         </div>
+         {% else %}
+
+          <div class="form-group">
+        <label for="service">Service demandé :</label>
+        <select name="service" id="service" class="serv" required>
+            <option value=""></option>
+            {% for service in services %}
+
+        <option value="{{ service.id }}">{{ service.nom }}</option>
+            {% endfor %}
+        </select>
+             </div>
+        </div>
+
+
+         <div class="form-group">
+        <label for="details">Informations essentielles de votre Projet :</label>
+        <textarea name="details" id="details" cols="30" rows="5" placeholder="veillez entrez l'essentiel de votre besoin" required></textarea>
+
+         </div>
+
+
+
+         <div class="form-group">
+        <label for="file"> associe un fichier * </label>
+        <input type="file" name="fichier" id="file" placeholder="associez un document">
+         </div>
+        <br>
+    {% endif %}
+    <div class="bt">
         <button type="submit">Envoyer</button>
+    </div>
     </form>
 </div>
+
+    <!--/div>
+     <div class="image-section"></div>
+    </div-->
+
 
 <!-- Boîte modale pour connexion/inscription -->
 <div class="modal" id="authModal">
     <div class="modal-content">
-        <p>Veuillez vous connecter ou vous inscrire pour soumettre votre devis.</p>
+        <p> <span style="color:#54d34b">MERCI DE VOTRE CONFIANCE !</span> <br> Votre demande est en-cour de traitement... <br>
+            Pour une meilleure experience utilisateur sur la plateforme, cliquez un sur boutton ci-dessous.👇</p>
         <button class="btn-primary" onclick="redirectToLogin()">Se connecter</button>
         <button class="btn-success" onclick="redirectToRegister()">S'inscrire</button>
+        <button class="btn-refuser`" onclick="redirectToHome()">pas maintenant</button>
     </div>
 </div>
 
@@ -144,13 +328,13 @@
     function redirectToRegister() {
         window.location.href = "{% url 'register' %}";
     }
+      function redirectToHome() {
+        window.location.href = "{% url 'home' %}";
+    }
 
     // Vérifier si on doit afficher la boîte modale
     {% if show_modal %}
         openAuthModal();
     {% endif %}
+
 </script>
-
-
-
-{% endblock %}

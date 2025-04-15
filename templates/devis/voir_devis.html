@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+
 
 {% block content %}
 
@@ -65,7 +65,7 @@ td[colspan="4"] {
 }
 
 </style>
-<a href="{% url 'dashboard' %}" class="btn">Retour</a>
+<a href="{% url 'client_dashbord' %}" class="btn">Retour</a>
     <h2>Liste des devis - {{ statut }}</h2>
     <table>
         <tr>
@@ -73,6 +73,7 @@ td[colspan="4"] {
             <th>Date</th>
             <th>Montant</th>
             <th>Fichier</th>
+            <th>action</th>
         </tr>
         <!-- afficher sous forme de table-->
         {% for devis in devis_list %}
@@ -84,11 +85,20 @@ td[colspan="4"] {
                 <!--verifier s'il y a des fichiers dans la table Devis-->
                 {% if devis.fichier %}
                     <a href="{{ devis.fichier.url }}" download>Télécharger</a>
+
                 {% else %}
                     Pas de fichier
                 {% endif %}
             </td>
-        </tr>
+            <td>
+                {% if devis.statut == "EN_ATTENTE" %}
+                <a href="{% url 'valider_devis' devis.id %}" class="btn btn-success">Je confirme mon consentement</a>
+                    {% endif %}
+                {% if devis.statut == "REFUSÉ" %}
+                <a href="{% url 'devis_form' %}" class="btn btn-success" style="color:#959717; font-size:18px;">Soumettre une Nouvelle Demande</a>
+                {% endif %}
+
+            </td>
         {% empty %}
         <tr>
             <td colspan="4">Aucun devis disponible</td>

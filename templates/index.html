@@ -1,88 +1,1550 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--linking font Awesome for icons-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
+    <!--linking swipper css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <title>Document</title>
+</head>
 
-{% block button %}
-
-    {% endblock %}
-{% block content %}
-    <!--- afficher le message de succes -->
-    {% for message in messages %}
-        <strong> {{ message }}</strong>
-    {% endfor %}
-
- <style>
-
-body {
+<style>
+ /* importing google font */
+@import url('https://fonts.googleapis.com/css2?family=Miniver&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+* {
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif ;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    color: #000;
-    background-color: #dedcdc;
-    overflow: auto;
-    height: auto;
+    box-sizing: border-box;
+  }
+
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
+:root {
+    /* colors */
+    --white-color:#fff;
+    --dark-color:#252525;
+    --primary-color:#3b141c;
+    --secondary-color:#f3961c;
+    --light-pink-color:#ccc;
+
+    /*font size*/
+    --font-size-s:0.9rem;
+    --font-size-n:1rem;
+    --font-size-m:1.12rem;
+    --font-size-l:1.5rem;
+    --font-size-xl:2rem;
+    --font-size-xxl:2.3rem;
+
+    /*font weight */
+    --font-weight-normal:400;
+    --font-weight-medium:500;
+    --font-weight-semibold:600;
+    --font-weight-bold:700;
+
+    /* border raduis */
+    --border-raduis-s:8px;
+    --border-raduis-m:30px;
+    --border-raduis-circle:50%;
+
+    /*site max width*/
+    --site-max-width:1300px;
+}
+html {
+    scroll-behavior: smooth;
+}
+
+/* style for whole site */
+ul {
+    list-style: none;
+
+}
+a {
+    text-decoration: none;
+}
+button{
+    cursor: pointer;
+    border:none;
+    background: none;
+}
+img {
+    width: 100%;
+}
+.section-content {
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: var(--site-max-width);
+}
+.section-title {
+    text-align: center;
+    padding: 60px 0 100px;
+    text-transform: uppercase;
+    font-size: var(--font-size-xl);
+}
+.section-title::after {
+    content: "";
+    width: 80px;
+    height: 5px;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: var(--border-radius-s);
+    background:var(--secondary-color);
+}
+
+.overla{
+   position:absolute;
+   top:0;
+   left:0;
+   bottom:0;
+   width:100%;
+   height:100hv;
+   background:url("media/images/Black_people_office_computer.webp") center no-repeat;
+   background-size: cover;
+   background-attachment: fixed;
+   z-index:-100; /* placer image en-dessous*/
+}
+
+.entete{
+    background-color: #fff;
+}
+
 header {
-    background-color: #ffffff;
-    color: #000;
-    padding: 10px 0;
-    position: relative;
+    max-width:90%;
+    height:100hv;
+    margin-right: auto;
+    margin-left:auto;
+    background-color: #fff;
+}
+.heure {
+    display:flex;
+    justify-content:right;
+    margin-bottom:-20px;
+    font-weight:bold;
+     color: #5c70de; /*  #6c757d */
 }
 
- </style>
+/* navigation */
+nav {
+    display: flex;
+    flex-wrap:wrap;
+    align-items:center;
+    width:100%;
+    padding:30px 0 10px;
+}
 
-<marquee class="mark1">
-    <p>developement application web - site web - logiciel desktop</p>
+/* Logo */
+nav .logo {
+    width:130px;
+}
+
+nav .menu-icon {
+    cursor: pointer;
+     display: none;
+    font-size: 30px;
+    color: #333;
+}
+
+nav ul {
+    flex:1;
+    display:flex;
+    justify-content: flex-end; /* liens du menu placer a la fin */
+    padding-right: 40px;
+    transition: all 0.3s ease;
+}
+
+nav ul li {
+    list-style : none; /* enlever les puces(.) */
+    margin-left: 20px;
+}
+
+nav ul li a {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #6c757d;
+    font-size:1.2rem;
+    transition: color 0.3s ease-in-out ;/* compte utiliser un effet sur element */
+}
+
+nav ul li a:hover {
+     box-shadow: 0 0 10px #000 ;
+     border-radius: var(--border-raduis-m);
+}
+
+/* PARTIE SECTION */
+.text {
+    padding:70px 0;
+    color:#fff;
+    max-width:90%;
+    margin-left:auto;
+    margin-right: auto;
+}
+.text h3 {
+    font-size:55px;
+    line-height: 2;
+    margin-bottom:1rem;
+}
+.text h3 span {
+    color: #fff;
+}
+.text p {
+    font-size:1.2rem;
+    line-height:1.5;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    color: #fff;
+}
+.text a {
+    padding: 10px 18px;
+    border: 2px solid transparent;
+    color: var(--primary-color);
+    border-radius: var(--border-raduis-m);
+    background: #2ec8fb;
+    font-weight: var(--font-weight-medium);
+    transition: 0.3s ease;
+}
+.text .buttons {
+    display: flex;
+    gap: 23px;
+
+}
+.text .contact-us {
+    color: var(--white-color);
+    border-color: var(--white-color);
+    background: transparent;
+}
+.contact-us:hover {
+    color: var(--primary-color);
+    border-color: #2ec8fb;
+    background: #2ec8fb;
+}
+.connect:hover {
+
+    color: #fff;
+    border-color: var(--white-color);
+    background: transparent;
+}
+
+/* style for whole site */
+ul{
+    list-style: none;
+
+}
+a{
+    text-decoration: none;
+}
+button {
+    cursor: pointer;
+    border:none;
+    background: none;
+}
+img{
+    width: 100%;
+}
+.section-content {
+    margin: 0 auto;
+    padding: 0 20px;
+    max-width: var(--site-max-width);
+}
+.section-title {
+    text-align: center;
+    padding: 60px 0 100px;
+    text-transform: uppercase;
+    font-size: var(--font-size-xl);
+}
+
+/*About section styling *****************************************************************/
+.about-section {
+    padding: 120px 0;
+    background: var(--light-pink-color);
+}
+.section-title::after {
+    content: "";
+    width: 80px;
+    height: 5px;
+    display: block;
+    margin: 10px auto 0;
+    border-radius: var(--border-raduis-s);
+    background:var(--secondary-color);
+}
+.about-section .section-content {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.about-section .about-image-wrapper .about-image {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: var(--border-raduis-circle);
+}
+.about-section .about-details .section-title {
+    padding: 0;
+}
+.about-section .about-details {
+    max-width: 50%;
+}
+.about-section .about-details .text-p {
+    line-height: 30px;
+    margin:50px 0 30px;
+    text-align: center;
+    font-size: var(--font-size-m);
+}
+
+.about-section .social-link-list{
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+}
+.about-section .social-link-list .social-link {
+    color: var(--primary-color);
+    font-size: var(--font-size-l);
+    transform: 0.2s ease;
+}
+.about-section .social-link-list .social-link:hover {
+    color: var(--secondary-color);
+}
+
+/* section css swipper ***************************************************************/
+
+body-p {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+.technologies {
+    padding: 20px 20px;
+    background-color: #fff;
+}
+
+.technologies h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+
+}
+
+.subtitle2 {
+    font-size: 14px;
+    color: #2a5d8d;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+.titre {
+    margin:20px;
+    text-align:center;
+
+}
+
+.swiper {
+    width: 80%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.swiper-slide img {
+    max-width: 100px;
+    height: auto;
+    filter: grayscale(50%);
+    transition: filter 0.3s ease-in-out;
+}
+
+.swiper-slide img:hover {
+    filter: grayscale(0%);
+}
+
+/* Pagination *****************************/
+.swiper-pagination {
+    position: relative;
+    bottom: 30px;
+}
+
+/* Boutons de navigation *********************/
+.swiper-button-prev,
+.swiper-button-next {
+    color: #333; /* Couleur des flèches */
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+    color: #2a5d8d; /* Effet au survol */
+}
+
+/***********************************************************************/
+#home h1{
+   margin: auto;
+    height: 400px;
+   color: #000000;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+   width: 90%;
+}
+#home {
+    animation:fadeIn 2s ease-in ;
+}
+.accueil{
+    display: flex;
+   justify-content: center;
+   text-align: center;
+}
+.accueil img{
+    margin: 20px;
+
+}
+p{
+    margin-left: 10px;
+    margin-top: 10px;
+    color: #000
+}
+h1{
+    margin-top: 30px;
+}
+h3{
+    font-style: oblique;
+    margin-top: 80px;
+    color: #000000;
+}
+     .image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+.image-box {
+    text-align: center;
+    width: 200px;
+    background: none;  /* */
+    border-radius: 10px;
+    padding: 10px;
+    margin-right: 40px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+img ::first-letter {
+
+    margin-right: 40px;
+}
+
+
+/* Corrige le fond (ne pas le faire défiler) */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: url("media/images/Black_people_office_computer.webp") center no-repeat;
+    background-size: cover;
+    z-index: -100;
+}
+
+/* Menu Responsive */
+nav ul {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 40px;
+    transition: all 0.3s ease;
+}
+
+nav .menu-icon {
+    display: none;
+    font-size: 30px;
+    color: #333;
+}
+
+@media screen and (max-width: 1024px) {
+
+
+
+}
+
+/* Media Query pour petit écran */
+@media screen and (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+        padding: 0;
+        display: none;
+        background-color: #fff;
+        margin-top: 20px;
+    }
+
+    nav ul.active {
+        display: flex;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+        text-align: left;
+        width: 100%;
+    }
+
+    nav .menu-icon {
+        display: block;
+        margin-left: auto;
+    }
+
+    .text h3 {
+        font-size: 32px;
+        line-height: 1.4;
+    }
+
+    .text {
+        text-align: center;
+    }
+
+    .text .buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+
+    @keyframes neonGlow {
+  0% {
+    text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 20px #000;
+  }
+  50% {
+    text-shadow: 0 0 10px #000, 0 0 20px 000, 0 0 40px #000;
+  }
+  100% {
+    text-shadow: 0 0 5px #000, 0 0 10px #000, 0 0 20px #000;
+  }
+}
+
+/* . Effet Néon Animé */
+.neon-animated{
+  color: #000; /* noire */
+  font-size: 2em;
+  font-weight: bold;
+  animation: neonGlow 1s infinite alternate;
+}
+
+    /*About section styling *************************************************************************/
+.about-section {
+    padding: 120px 0;
+    background: var(--light-pink-color);
+
+}
+.about-section .section-content {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    justify-content: space-between;
+}
+.about-section .about-image-wrapper .about-image {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: var(--border-radius-circle);
+}
+.about-section .about-details .section-title {
+    padding: 0;
+}
+.about-section .about-details {
+    max-width: 50%;
+}
+.about-section .about-details .text-p {
+    line-height: 30px;
+    margin:50px 0 30px;
+    text-align: center;
+    font-size: var(--font-size-m);
+}
+
+.about-section .social-link-list{
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+}
+.about-section .social-link-list .social-link {
+    color: var(--primary-color);
+    font-size: var(--font-size-l);
+    transform: 0.2s ease;
+}
+.about-section .social-link-list .social-link:hover {
+    color: var(--secondary-color);
+}
+
+/* Menu section styling ***************************************************************/
+.menu-section {
+  background: #ced4da;
+  padding: 2rem;
+  color: #000;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+
+.menu-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+
+.menu-item {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  height: 220px; /* Hauteur fixe réduite */
+  flex: 1 1 250px;
+  max-width: 300px;
+  padding: 0.5rem; /* Réduction du padding */
+  text-align: center;
+  transition: transform 0.4s ease;
+}
+
+.menu-item:hover {
+  transform: translateY(-8px);
+}
+
+.menu-image {
+  width: 100%;
+  height: 80px; /* Réduction hauteur image */
+  aspect-ratio: 1/1;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
+
+.name {
+   font-size: 1rem; /* Réduction taille *
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.text {
+  font-size: 0.875rem; /* Plus petit texte */
+  color: #333;
+  margin-top:-60px;
+}
+/* nos services ***********************************************************/
+
+.sect {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    text-align: center;
+    background: url('media/images/developpementweb_kUIljaQ.jpg') no-repeat center/cover;
+}
+
+.hero {
+    position: relative;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.container-p {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+}
+
+.container-p h1 {
+    color: #58595b;
+    margin-bottom: 0;
+}
+
+.container-p h1::after {
+    content: "";
+    display: block;
+    width: 90px;
+    height: 5px;
+    margin: 10px auto 0;
+    border-radius: var(--border-radius-s);
+    background: var(--secondary-color);
+}
+
+.container-p h3 {
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #58595b;
+}
+
+.container-p p {
+    color: #909293;
+    line-height: 25px;
+    font-size: var(--font-size-m);
+    margin-bottom: 20px;
+}
+
+/* ---- SERVICES ---- */
+.services {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 50px 20px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.service-p {
+    flex: 1 1 250px;
+    max-width: 300px;
+    padding: 20px;
+    margin-top: 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: white;
+    color: #58595b;
+    box-sizing: border-box;
+     transition: transform 0.4s ease;
+}
+.service-p:hover {
+    transform: translateY(-8px);
+ }
+
+.icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.style-p {
+    line-height: 25px;
+    color: #58595b;
+}
+
+.blue {
+    color: #337ab7;
+    font-weight: bold;
+}
+/*technologies ************************************************************************************************************/
+/***********************************************************************************************************************/
+
+.techno {
+  font-family: Arial, sans-serif;
+  background-color: #ddd;
+  padding: 20px 0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.section-content {
+  display: flex;
+  flex-wrap: wrap; /* Pour gérer le responsive */
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  gap: 20px;
+}
+
+.service {
+  flex: 1 1 250px; /* largeur minimale */
+  text-align: center;
+  padding: 20px;
+  color: white;
+  text-transform: uppercase;
+  box-sizing: border-box;
+  min-width: 250px;
+}
+
+/* Couleurs différentes */
+.service:nth-child(1) { background: #3d3833; }
+.service:nth-child(2) { background: #b77e5b; }
+.service:nth-child(3) { background: #6e6a66; }
+.service:nth-child(4) { background: #aa8771; }
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+  background: rgba(255, 255, 255, 0.2);
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.tech {
+  font-size: 14px;
+  margin: 5px 0;
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .menu-item {
+    flex: 1 1 100%;
+  }
+}
+
+/* Responsive : sur mobile, les blocs s'empilent */
+@media (max-width: 768px) {
+  .section-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+   .menu-item {
+    flex: 1 1 45%;
+  }
+}
+
+
+/*contact us section styling  ***********************************************/
+.contact-section {
+  padding: 50px 0 100px;
+  background: var(--light-pink-color);
+  overflow-x: auto; /* Permet le scroll horizontal si besoin */
+}
+
+.contact-section .section-content {
+  display: flex;
+  flex-direction: row;  /* Toujours en ligne */
+  gap: 32px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: nowrap; /* Évite le retour à la ligne */
+}
+
+.contact-info-list {
+  flex: 1;
+  list-style: none;
+  padding: 0;
+  min-width: 300px; /* Assure une largeur minimale */
+}
+
+.contact-info {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+  align-items: center;
+}
+
+.contact-form {
+  flex: 1;
+  min-width: 300px; /* Assure que le formulaire garde une taille lisible */
+  max-width: 500px;
+}
+
+.contact-form .form-input {
+  width: 100%;
+  height: 50px;
+  padding: 0 12px;
+  margin-bottom: 16px;
+  background: var(--white-color);
+  border-radius: var(--border-raduis-s);
+  border: 1px solid #fff;
+}
+
+.contact-form textarea.form-input {
+  height: 100px;
+  padding: 12px;
+  resize: vertical;
+}
+
+.contact-form .submit-button {
+  padding: 10px 26px;
+  color: var(--white-color);
+  background: var(--primary-color);
+  border-radius: var(--border-raduis-m);
+  border: 1px solid var(--primary-color);
+  transition: 0.3s ease;
+}
+
+.contact-form .submit-button:hover {
+  color: var(--primary-color);
+  background: transparent;
+}
+
+/* footer section styling ****************************************************************/
+.footer-section {
+    padding:30px;
+    background:var(--dark-color);
+}
+
+.footer-section :where(.copyright-text, .social-link, .policy-link) {
+    color:var(--white-color);
+    transition: 0.2s ease;
+}
+.footer-section .section-content {
+    display:flex;
+    flex-wrap: wrap; /* permet le retour à la ligne sur petit écran */
+    justify-content:space-between;
+}
+.footer-section .social-link-list {
+    display:flex;
+     gap:25px;
+}
+.footer-section .social-link-list .social-link {
+    font-size:var(--font-size-l);
+}
+.footer-section .social-link-list .social-link:hover ,
+.footer-section .policy-text .policy-link:hover {
+    color: var(--secondary-color);
+}
+.footer-section .policy-text .separator {
+    margin:0 5px;
+    color: #fff;
+}
+/* responsive media query code for max width 1024px ***************************************** 1024 ***********/
+@media screen and (max-width: 1024px) {
+    .menu-section .menu-list  {
+        gap: 30px;
+    }
+    .menu-section .menu-list .menu-item {
+        width: calc(100% / 2 - 30px);
+    }
+    .menu-section .menu-list .menu-item .menu-image {
+        max-width: 200px;
+    }
+     .services {
+        padding: 40px 10px;
+    }
+    .service-p {
+        max-width: 45%;
+    }
+}
+
+/* Responsive media query code for max width 640px ******************************************************************/
+@media screen and (max-width: 640px)  {
+    .menu-section .menu-list {
+        gap: 60px;
+    }
+    .menu-section .menu-list .menu-item {
+        width: 100%;
+    }
+    .footer-section .section-content {
+        flex-direction:column;
+        gap:20px;
+    }
+     .sect {
+        flex-direction:column;
+        gap:20px;
+    }
+}
+@media screen and (max-width: 768px)  {
+.hero {
+        height: auto;
+        padding: 40px 20px;
+    }
+
+    .service-p {
+        max-width: 100%;
+    }
+
+    .container-p h1,
+    .container-p h3 {
+        font-size: 20px;
+    }
+
+    .icon {
+        font-size: 35px;
+    }
+
+/*Responsive media query code for max width 900px */
+@media screen and (max-width: 900px) {
+    :root {
+        --font-size-m:1rem;
+        --font-size-l:1.3rem;
+        --font-size-xl:1.5rem;
+        --font-size-xxl:1.8rem;
+    }
+    body.show-mobile-menu header::before {
+        content: "";
+        position: fixed;
+        left:0;
+        top:0;
+        right:0;
+        height: 100%;
+        width: 100%;
+        backdrop-filter: blur(5px);
+        background: rgba(red, green, blue, 0.2);
+}
+
+    .navbar :where(#menu-close-button, #menu-open-button) {
+        font-size: var(--font-size-l);
+    }
+
+    .navbar #menu-close-button {
+        position: absolute;
+        right: 30px;
+        top:30px;
+    }
+    .navbar #menu-open-button {
+        color: var(--white-color);
+    }
+
+    .navbar .nav-menu {
+        display: block;
+        position: fixed;
+        left: -300px;
+        top: 0;
+        width: 300px;
+        height: 100%;
+        display: flex;
+        flex-direction:column ;
+        align-items: center;
+        padding-top: 100px;
+        background: var(--white-color);
+        transition: left 0.2s ease;
+    }
+    body.show-mobile-menu .navbar .nav-menu {
+        left: 0;
+    }
+    .navbar .nav-menu .nav-link {
+        color: var(--dark-color);
+        display: block;
+        margin-top: 5px;
+        font-size: var(--font-size-l);
+    }
+    .hero-section .section-content {
+        gap: 50px;
+        text-align: center;
+        padding: 30px 20px 20px;
+        flex-direction: column-reverse;
+        justify-content: center;
+    }
+    .hero-section .hero-details :is(.subtitle, .description),
+    .about-section .about-details .contact-section .content-form {
+        max-width: 100%;
+
+    }
+    .hero-section .hero-details .buttons {
+        justify-content: center;
+    }
+
+    .hero-section .hero-image-wrapper {
+        max-width: 270px;
+        margin-right: 0;
+    }
+    .about-section .section-content {
+        gap: 70px;
+        flex-direction: column-reverse;
+    }
+    .about-section .about-image-wrapper .about-image {
+        width: 100%;
+        height: 100%;
+        max-width: 250px;
+        aspect-ratio: 1;
+    }
+    .menu-section .menu-list {
+        gap: 30px;
+    }
+    .menu-section .menu-list .menu-item {
+        width: calc(100% / 2 - 30px);
+    }
+    .menu-section .menu-list .menu-item .menu-image {
+        max-width: 200px;
+    }
+    .gallery-section .gallery-list .gallery-item {
+        width: calc(100% /2 - 30px);
+    }
+    .contact-section .section-content {
+        align-items: center;
+        flex-direction:column-reverse;
+    }
+    .container-p .service-p {
+       flex-direction:column;
+        align-items: center;
+    }
+    .service {
+        display: block;
+        position: fixed;
+        flex-direction:column ;
+        align-items: center;
+    }
+
+}
+     .sms {
+       align-items:center;
+       margin-bottom:20px;
+       color:#f05462;
+       font-size: 1.1em;
+       font-weight: bold;
+       border-radius: 5px;
+    }
+
+    /****************************************************/
+.menu-section {
+     color: #fff;
+     background:cover;
+}
+.name {
+     color: #fff;
+}
+
+.menu-section .menu-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 110px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.menu-section .menu-list .menu-item {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: space-between;
+    flex-direction: column;
+    width: calc(100% / 3 - 110px);
+}
+
+.menu-section .menu-list .menu-item .menu-image {
+    max-width: 83%;
+    aspect-ratio: 1;
+    margin-bottom: 15px;
+    object-fit: contain;
+}
+.menu-section .menu-list .menu-item .name {
+    margin: 12px 0;
+    font-size: var(--font-size-l);
+    font-weight: var(--font-weight-semibold);
+}
+
+</style>
+
+<body>
+
+<div class="entete">
+    <header>
+        <a class="heure"> {{ date|date:"d F Y H:i:s" }} </a>
+        <nav>
+
+            <a href="{% url 'home' %}"><img src="media/images/logo jeoline.PNG" alt="logo de l'entreprise" class="logo"></a>
+            <ul id="nav-links">
+                  {% if messages %}
+                      {% for message in messages %}
+                        <div class="sms">
+                          {{ message }}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                <li><a href="{% url 'home' %}" class="tete" > Accueil </a></li>
+                {% block propos %}<li><a href="#about" class="tete" > À propos </a> </li>{% endblock %}
+
+                <li>
+                    <a href="#services" class="tete">services</a>
+                 </li>
+
+                {% if user.is_authenticated %}
+
+                {% block mon_compte %}<li><a href="{% url 'client_dashbord' %}" class="tete"> Mon compte </a></li>{% endblock %}
+                {% block logout %} <li ><a href="{% url 'logout' %}"><button class="logout" onclick="openLogoutModal()" >Deconnexion</button></a></li> {% endblock %}
+
+                {% else %}
+
+                {% block register %}   <li><a href="{% url 'register' %}" class="tete"> S'incrire</a></li> {% endblock %}
+    {% block login %}     <li><a href="{% url 'login' %}" class="tete">connecter</a></li>  {% endblock %}
+            {% endif %}
+
+            </ul>
+
+            <span class="menu-icon" onclick="toggleMenu()"> ☰ </span>
+        </nav>
+
+    </header>
+</div>
+
+<section class="text">
+    <h3><span class='auto-typing'></span></h3>
+    <p class="neon-animated"> Jeoline Corporates est une societe informatique <br>
+        Specialisee dans le developement d'application web, <br>
+        de site internet et logiciel desktop</p>
+    <div class="buttons">
+    <a href="{% url 'contact_view' %}" class="contact-us" >Contactez-nous</a>
+        <a href="{% url 'devis_form' %}" class="connect">Besoin d'un service</a>
+    </div>
+</section>
+    <div class="overla"></div>
+
+<marquee class="marque" style="margin-top:18px">
+    <p style="color: #fff;"> Development application web - site internet - logiciel desktop- application mobile</p>
 </marquee>
-{% for service in services %}
-  <section id="home">
 
-      <div class="accueil">
-          <h3 style=" margin-top: 150px;"> <br>
-            Bienvenue la plateforme de la gestion de services <br>  Où
-            la comptabilité et le génie logiciel se rencontrent. <br> <br>
-            Transformez votre entreprise avec notre expertise <br>
-            en comptabilite et genie logiciel !
-              <br>
-              <br> <br> <br>
-              <a href="{% url 'apropos' %}" style=" text-decoration:none; color:#6c6b6b"><p> learn more </p></a>
-            </h3>
-                <a href="{% url 'service_gl' %}">
-                    <img src="{{ service.image.url }}" alt="developpement web" width="50%" ></a>
+<!-- https://chatgpt.com/canvas/shared/67e4ca3884cc8191b8304874d992e374-->
+
+        <!-- About section                                  ----------------->
+         <section class="about-section" id="about">
+            <div class="section-content">
+                <div class="about-image-wrapper">
+
+                    <img src="media/images/PlanLocaisation.jpg" alt="About Us" class="about-image">
+                </div>
+                <div class="about-details">
+                    <h2 class="section-title">A Propos de Nous</h2>
+                    <p class="text-p"> Cree en 2023, Jeoline Corporates est specialise dans la prestation des services informatique plus precisement
+                        le developpement d'application web, application mobile, site internet et logiciel desktop. Situee dans la region du littoral
+                           dans le quatier BONANJO precisement dans l'immeuble IBANNE derrière la falaise Diamond
+                    </p>
+                    <div class="social-link-list">
+                        <a href="#" class="social-link"><i class="fa-brands
+                            fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands
+                            fa-youtube"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands
+                            fa-twitter"></i></a>
+                    </div>
+                </div>
             </div>
-        <p style="text-align: center; font-weight: bold; font-size: 60px;"> Nos Services </p>
-        <p style="text-align: center; font-size: 19px;">
-            Explorez nos services personnalisés en comptabilité et génie logiciel. <br>
-             Chaque solution est conçue pour répondre à vos besoins spécifiques.</p>
+         </section>
+
+ <!-- Menu section-->
+        <section class="menu-section">
+  <h2 class="section-title" style="margin-bottom:-20px; margin-top:-20px;">Nos Clients</h2>
+
+  <div class="menu-list">
+    <div class="menu-item">
+      <img src="../media/images/client3.jpg" alt="Logo Jeoline" class="menu-image">
+      <div class="menu-details">
+        <h3 class="name" style="margin-top:15px;margin-bottom:-70px;">CAMTEL</h3>
+        <p class="text" style="color:#000;"> Operateur telephonique d'origine Camerounais</p>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <img src="../media/images/client2.jpg" alt="Logo Jeoline" class="menu-image">
+      <div class="menu-details">
+        <h3 class="name" style="margin-top:15px;margin-bottom:-70px;">Honfleur Logistique</h3>
+        <p class="text" style="color:#000;">Societe qui offre les services en logique</p>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <img src="../media/images/client1.jpg" alt="Logo Jeoline" class="menu-image">
+      <div class="menu-details">
+        <h3 class="name" style="margin-top:15px;margin-bottom:-70px;">CLINIQUE MEDICALE ODYSEE</h3>
+        <p class="text" style="color:#000;"> CLinnique Medicale ODYSEE.</p>
+      </div>
+    </div>
+       <div class="menu-item">
+      <img src="../media/images/client4.jpg" alt="Logo Jeoline" class="menu-image">
+      <div class="menu-details" >
+        <h3 class="name" style="margin-top:15px;margin-bottom:-70px;">LUISE</h3>
+        <p class="text" style="color:#000;">.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!--section des services -->
+<div class="sect">
+ <div class="hero">
+        <div class="overlay"></div>
+        <div class="container-p" id="services">
+            <h1 style="color:#58595b; margin-bottom:20px;" >Nos services</h1>
+            <h3 style="margin-bottom:20px;">DES SERVICES INFORMATIQUES PERSONNALISÉS <span class="highlight">DEPUIS 2021</span></h3>
+            <p>Nos services de développement sont orientés selon trois axes : les applications web, les applications mobiles,
+                les sites Internet <br> et les logiciels desktop.
+                Nous pouvons assurer l'hébergement sur nos propres serveurs ou sur ceux de nos partenaires. <br>Forts de notre expérience,
+                et selon les projets, nous pouvons aussi proposer du conseil, de la formation et de la création de contenus.</p>
+        </div>
+    </div>
+    <section class="services">
+        <div class="service-p">
+            <i class="icon"><img src="media/images/developpement-application-sur-mesure.jpg" alt="🌐" STYLE="height:170px;"></i>
+            <h2>APPLICATIONS <span class="blue">WEB</span></h2>
+            <p class="style-p">Nous développons des applications web sur mesure (intranet, extranet) pour faciliter la gestion de votre activité professionelle.
+                 Les systèmes sont multi-plateformes, accessibles depuis partout et s'adaptent à l'utilisateur connecté.
+                 Les mises à jour peuvent se faire à tout moment de manière transparente.</p>
+        </div>
+        <div class="service-p">
+            <i class="icon"> <img src="media/images/developpement-dapplication-mobile.web" alt="✏️" STYLE="height:170px;"></i>
+            <h2>APPLICATIONS <span class="blue">MOBILE</span></h2>
+            <p class="style-p">Nous maîtrisons toutes les étapes de la réalisation d'un site Internet :
+                analyse des besoins, cahier des charges, élaboration de solutions techniques, graphiques,
+                structurelles et ergonomiques, codage du site ou intégration d'un CMS (Wordpress),
+                référencement (SEO), formation et maintenance.</p>
+        </div>
+
+         <div class="service-p">
+            <i class="icon"> <img src="media/images/site-internet-vitrine.jpg" alt="✏️" STYLE="height:170px;"></i>
+            <h2>SITES <span class="blue">INTERNET</span></h2>
+            <p class="style-p">Nous maîtrisons toutes les étapes de la réalisation d'un site Internet :
+                analyse des besoins, cahier des charges, élaboration de solutions techniques, graphiques,
+                structurelles et ergonomiques, codage du site ou intégration d'un CMS (Wordpress),
+                référencement (SEO), formation et maintenance.</p>
+        </div>
+        <div class="service-p">
+            <i class="icon"><img src="media/images/developpementweb_kUIljaQ.jpg" alt="⚙" STYLE="height:170px;">️</i>
+            <h2>LOGICIELS <span class="blue">DESKTOP</span></h2>
+            <p class="style-p">Nous développons des logiciels commerciaux largement distribués ou des logiciels sur mesure adaptés à une
+                activité professionnelle spécifique (gestion de stocks, de ressources, de facturations, de réservations).</p>
+        </div>
     </section>
-    <main>
+</div>
 
-         <div class="image-container">
-            <div class="image-box">
-              <a href="{% url 'service_comptabilite' %}" style=" color: black;">.
-                <img src="media/images/WhatsApp Image 2024-07-02 à 13.48.23_401485e9.jpg" alt="Service compta" width="60%" >
-            </a>
-                <a href="{% url 'service_comptabilite' %}" style=" text-decoration: none;"><h3>Service de Comptabilité</h3></a>
-                <p>Gestion de vos finances avec précision et efficacité.</p>
+<!--section swipper-->
+<div class="body-p">
+ <section class="technologies">
+     <div class="titre">
+        <h2>NOTRE ENVIRONNEMENT</h2>
+        <p class="subtitle2">TECHNOLOGIES ET OUTILS</p>
+     </div>
+
+        <!-- Swiper Container -->
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+
+                <div class="swiper-slide"><img src="media/images/logo_C.jpeg" alt="Logo 2" style="width:50px;"></div>
+                <div class="swiper-slide"><img src="media/images/logo_Eclipse.jpeg" alt="Logo 3"></div>
+                <div class="swiper-slide"><img src="media/images/logo_html_css_js.jpeg" alt="Logo 4"></div>
+                <div class="swiper-slide"><img src="media/images/logo_java.jpeg" alt="Logo 5"></div>
+                <div class="swiper-slide"><img src="media/images/logo_jquery.jpeg" alt="Logo 6"></div>
+                <div class="swiper-slide"><img src="media/images/logo_linux.jpeg" alt="Logo 6" style="width:50px;"></div>
+                <div class="swiper-slide"><img src="media/images/logo_php.jpeg" alt="Logo 6"></div>
+                <div class="swiper-slide"><img src="media/images/logo_windows.jpeg" alt="Logo 6"></div>
+                <div class="swiper-slide"><img src="media/images/logoApache.jpeg" alt="Logo 6"></div>
+                <div class="swiper-slide"><img src="media/images/logodell.jpeg" alt="Logo 6"></div>
+                <div class="swiper-slide"><img src="media/images/logoMicrosoft.jpeg" alt="Logo 6"></div>
+                <div class="swiper-slide"><img src="media/images/logoPython.jpeg" alt="Logo 6"></div>
+                <div class="swiper-slide"><img src="media/images/logoVmware.jpeg" alt="Logo 6"></div>
+                <div class="swiper-slide"><img src="media/images/logoWordPress.jpeg" alt="Logo 6"></div>
+                <div class="swiper-slide"><img src="media/images/mysql.jpeg" alt="Logo 6"></div>
+
             </div>
-            <div class="image-box">
-               <a href="{% url 'service_gl' %}" style=" text-decoration :none; color: black;">
-                <img src="media/images/WhatsApp Image 2024-07-02 à 13.48.20_ca7c369d.jpg" alt="Service 2" width="50%" height="400px"></a>
+             <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
 
-                <a href="{% url 'service_gl' %}" style=" text-decoration :none;"><h3>Génie Logiciel</h3></a>
-                <p>Développement de solutions logicielles sur mesure.</p>
-            </div>
-            <div class="image-box">
-                <a href="{% url 'service_comptabilite' %}" style=" text-decoration : none; color: black;">
-                    <img src="media/images/IMG-20240702-WA0024.jpg" alt="Service 3" width="50%" height="400px"></a>
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+    </section>
+</div>
 
-                <a href="{% url 'service_comptabilite' %}" style=" text-decoration: none;"><h3>Consultation</h3></a>
-                <p>Conseils d'experts pour optimiser votre activité.</p>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- section des technologies-->
+<section class="techno">
+<div class="container">
+    <div class="section-content">
+        <div class="service">
+            <div class="title">APPLICATIONS WEB</div>
+            <div class="subtitle">INTRANET, EXTRANET</div>
+            <div class="sous-titre">
+            <div class="tech">PHP, ColdFusion, ASP, CGI, ISAPI</div>
+            <div class="tech">MS SQL, Access, MySQL</div>
             </div>
         </div>
-    </main>
-{% endfor %}
+        <div class="service">
+            <div class="title">SITES INTERNET</div>
+            <div class="subtitle">WEBDESIGN</div>
+            <div class="sous-titre">
+            <div class="tech">HTML 5, CSS 3, Javascript</div>
+            <div class="tech">Bootstrap, JQuery, Wordpress</div>
+            </div>
+        </div>
+        <div class="service">
+            <div class="title">LOGICIELS</div>
+            <div class="subtitle">DÉVELOPPEMENT</div>
+            <div class="sous-titre">
+            <div class="tech">Delphi, C++, C</div>
+            <div class="tech">VBA</div>
+            </div>
+        </div>
+      <div class="service">
+            <div class="title">LOGICIELS</div>
+            <div class="subtitle">mobiles</div>
+            <div class="sous-titre">
+            <div class="tech">java, JavaScript, React Native</div>
+            <div class="tech">Flutter</div>
+            </div>
+      </div>
+        </div>
+    </div>
 
-{% endblock %}
+</section>
+
+<!--section des realisations -->
+<div class="sect">
+ <div class="hero">
+        <div class="overlay"></div>
+        <div class="container-p" id="realisations">
+            <h1 style="color:#58595b; margin-bottom:-20px;" >Nos Realisations</h1>
+            <h3 style="margin-bottom:20px;margin-top:43px; color:#5690bc;">QUELQUES PROJETS EXEMPLAIRES</h3>
+            <p>Voici une sélection de réalisations qui illustrent nos trois axes de développement informatique.</p>
+        </div>
+    </div>
+    <section class="services">
+        <div class="service-p">
+            <i class="icon">🌐</i>
+            <h2>APPLICATIONS <span class="blue">WEB</span></h2>
+            <p class="style-p"> FONPROStages - FONPROSup - MatuBil-VD - Services des énergies d'Yverdon -
+                FFPC-Form / Cours - FFPC-Form / PeDG - FOCAL - Etat de Vaud (Experts et ACD/GCD). Services d'entraide bénévole.</p>
+        </div>
+        <div class="service-p">
+            <i class="icon">📱</i>
+            <h2>APPLICATIONS <span class="blue">MOBILE</span></h2>
+            <p class="style-p">Cardispo, FUTA App, Traveler, Agri’App</p>
+        </div>
+
+         <div class="service-p">
+            <i class="icon"> ✏️</i>
+            <h2>SITES <span class="blue">INTERNET</span></h2>
+            <p class="style-p"> www.zangotech.com , ECC-Alliance - DevC Cameroun - Route de la Soie
+                - Circul'Action - Brozer - Sinoptic - www.clinichome.cm - Eco-sai - Tech Software - CH-ina - www.kamerfood.com - www.dikalo.com  - GPPV</p>
+        </div>
+        <div class="service-p">
+            <i class="icon">⚙️</i>
+            <h2>LOGICIELS <span class="blue">DESKTOP</span></h2>
+            <p class="style-p">UK Solid and Gaseous Biomass Carbon Calculator - Elogia - CISMail - Congress Up - Papillons - PlayMath</p>
+        </div>
+    </section>
+</div>
+
+<!--section contact-->
+<section class="contact-section">
+    <h2 class="section-title">Contact-Us</h2>
+    <div class="section-content">
+        <ul class="contact-info-list">
+            <li class="contact-info">
+                <i class="fa-solid fa-location-crosshairs"></i>
+                <p>info@jeolinewebsite.com</p>
+            </li>
+
+            <li class="contact-info">
+                <i class="fa-regular fa-envelope"></i>
+                <p>123 Bonanjo hotel la Falaise Daimond, immeuble Ibanne 3ieme etages</p>
+            </li>
+            <li class="contact-info">
+                <i class="fa-solid fa-phone"></i>
+                <p>237 678-576-489</p>
+            </li>
+            <li class="contact-info">
+                <i class="fa-regular fa-clock"></i>
+                <p>Monday -Friday: 8:00 AM - 5:00 PM</p>
+            </li>
+            <li class="contact-info">
+                <i class="fa-regular fa-clock"></i>
+                <p>Sunday : Closed</p>
+            </li>
+            <li class="contact-info">
+                <i class="fa-solid fa-globe"></i>
+                <p>WWW.jeoline.com</p>
+            </li>
+        </ul>
+
+        <form id="contact-form" method="POST" action="" class="contact-form">
+             {% csrf_token %} <!--protection csrf_token-->
+            <input type="text" placeholder="Your name" class="form-input" required>
+            <input type="email" placeholder="your email" class="form-input" required>
+            <textarea placeholder="Your message" class="form-input" required></textarea>
+            <button type="submit" class="submit-button">Envoyer</button>
+        </form>
+
+    </div>
+</section>
+
+<!--section footer-->
+<footer class="footer-section">
+    <div class="section-content">
+        <p class="copyright-text">@ 2025 tous droits reserve</p>
+
+        <div class="social-link-list">
+            <a href="" class="social-link"><i class="fa-brands fa-facebook"></i></a>
+            <a href="" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+            <a href="" class="social-link"><i class="fa-brands fa-twitter"></i></a>
+        </div>
+
+        <p class="policy-text">
+            <a href="" class="policy-link"> Privacy policy</a>
+            <span class="separator">.</span>
+            <a href="" class="policy-link">Refund policy</a>
+        </p>
+    </div>
+</footer>
+
+
+<script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+ <!-- configuration de l'element qui va saisir le texte automatiquement-->
+
+<script>
+    // Definir et initialise objet puis passer la classe ('') utiliser pour l'auto saisir
+    let typed = new Typed('.auto-typing', {
+        strings: ['solutions informatiques','Developpement','applications web','applications mobiles','logiciels desktop','conception sites internet','hébergement sur mesure'], // passer objet qui contient les options
+        typeSpeed: 100,  // vitesse de saisir
+        backSpeed: 100, // vitesse de disparition des elements
+        loop: true, //affichage des elements en boucle
+        fadeOut: true, //effet
+        fadeOutClass: 'typed-fade-out',
+        fadeOutDelay:500,
+    })
+
+    /// togle navbar
+
+    function toggleMenu() {
+    const navLinks = document.getElementById("nav-links");
+    navLinks.classList.toggle("active");
+    }
+    //section swipper
+
+    var swiper = new Swiper(".mySwiper", {
+        slidesPerView: 4, //nombre de logos visible
+        spaceBetween: 5, //espace entre les logos
+        loop: true, //boucle continue
+        autoplay: {
+            delay: 1500,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        breakpoints: {
+            640: { slidesPerView: 2, spaceBetween: 20 },
+            768: { slidesPerView: 3, spaceBetween: 30 },
+            1024: { slidesPerView: 5, spaceBetween: 40 }
+        }
+});
+
+</script>
+</body>
+
+</html>

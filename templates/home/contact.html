@@ -13,21 +13,44 @@
             align-items: center;
             min-height: 100vh;
             background-color: #f7f7f7;
+            overflow: hidden;
+
+        }
+         .bt {
+            margin-bottom:550px;
+            margin-right:40px;
+            border-radius: 15px;
+            margin-left:-190px;
+        }
+        .bt a {
+          background:#323131;
+            padding:5px;
+            border-radius: 5px;
+            text-decoration:none;
+            color:#fff;
+    }
+     .bt a:hover {
+             background:#5a5a5a;
+
         }
 
         .container {
-             width: 80%;
+            width: 80%;
+            height: 100vh;
             max-width: 900px;
             display: flex;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
             overflow: hidden; /* Ensure rounded corners work */
+            margin-top:-5px;
+
         }
 
         .contact-section {
             flex: 1;
             padding: 30px;
             background-color: #fff;
+            margin-bottom:-20px;
         }
 
         .image-section {
@@ -36,22 +59,23 @@
             background-size: cover;
             background-position: center;
             margin-top: 10px;
+            margin-bottom:20px;
         }
 
         .logo {
             width: 100px;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
         }
 
         h2 {
             color: #333;
-            margin-bottom: 5px;
+            margin-top: -2px;
         }
 
         p {
             color: #777;
             font-size: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             font-weight: bold;
         }
 
@@ -64,6 +88,8 @@
             margin-bottom: 5px;
             font-size: 16px;
             font-weight: bold;
+            color:rgb(85, 84, 84);
+
         }
 
         input, textarea {
@@ -95,11 +121,12 @@
             cursor: pointer;
             width: 100%;
             font-size: 1.1em;
+            margin-bottom:20px;
             transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #512da8;
+            background-color: #0d6efd;
         }
 
          /* 🔹 MODAL STYLES 🔹 */
@@ -147,6 +174,9 @@
             .container {
                 width: 95%;
                 flex-direction: column;
+                margin-top:20px;
+                overflow: show; /* Ensure rounded corners work */
+                 margin-right:10px;
             }
 
             .image-section {
@@ -156,14 +186,39 @@
             .contact-section {
                 padding: 20px;
             }
+             .sms {
+               display:flex;
+               align-items:center;
+               margin-bottom:20px;
+               color:#f05462;
+               font-size: 1.1em;
+               font-weight: bold;
+               border-radius: 5px;
+
+            }
+            .bt  {
+                 flex-direction: column;
+                 margin-left:5px;
+                 margin-bottom:700px;
+                margin-right:10px;
+                border-radius: 15px;
+
+            }
         }
     </style>
 </head>
 <body>
 
+<div class="bt">
+     {% if user.is_authenticated %}
+        <a href="{% url 'client_dashbord' %}" class="tete" > Retour</a>
+    {% else %}
+        <a href="{% url 'home' %}" class="tete" > Retour</a>
+    {% endif %}
+</div>
 <div class="container">
     <div class="contact-section">
-        <img src="/media/images/logo jeoline.PNG" alt="Image description" class="logo">
+        <a href="{% url 'home' %}"><img src="/media/images/logo jeoline.PNG" alt="Image description" class="logo"></a>
         <h2>Contactez-nous</h2>
         <p>Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.</p>
 
@@ -178,6 +233,11 @@
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" required>
                 <span class="error" id="error-email"></span>
+            </div>
+             <div class="form-group">
+                <label for="email">Adresse</label>
+                <input type="text" id="adresse" name="adresse" required>
+                <span class="error" id="error-adresse"></span>
             </div>
             <div class="form-group">
                 <label for="message">Message</label>

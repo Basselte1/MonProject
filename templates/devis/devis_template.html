@@ -1,83 +1,150 @@
 <!DOCTYPE html>
 <html lang="fr">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>   Devis  </title>
+    <title>Devis</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 30px;
             background-color: #f4f4f9;
             color: #333;
         }
+
         .invoice {
-            max-width: 800px;
+            max-width: 850px;
             margin: auto;
             background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
+
         header {
             text-align: center;
-            margin-bottom: 20px;
+            border-bottom: 2px solid #5690bc;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
         }
-        .company-info, .client-info, .project-info, .pricing {
-            margin-bottom: 20px;
+
+        header img {
+            max-width: 200px;
+            margin-bottom: 10px;
         }
-        h1, h2 {
-            color: #202020;
+
+        header h1 {
+            margin: 10px 0;
+            font-size: 28px;
+            color: #5690bc;
         }
+
+        header p {
+            font-size: 14px;
+            color: #777;
+        }
+
+        h2 {
+            color: #5690bc;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .PART {
+            display: flex;
+            justify-content: space-between;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .company-info, .client-info {
+            width: 48%;
+        }
+
+        .project-info, .pricing {
+            margin-top: 30px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 15px;
+            font-size: 15px;
         }
+
         table th, table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+            border: 1px solid #e1e1e1;
+            padding: 10px 12px;
         }
+
         table th {
-            background-color: #828385;
+            background-color: #5690bc;
             color: #fff;
+            font-weight: normal;
         }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table td:last-child, table th:last-child {
+            text-align: right;
+        }
+
+        table tr:last-child td {
+            font-weight: bold;
+        }
+
         footer {
+            margin-top: 40px;
+            font-size: 13px;
             text-align: center;
-            margin-top: 20px;
-            color: #555;
+            color: #888;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .PART {
+                flex-direction: column;
+            }
+            .company-info, .client-info {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="invoice">
         <header>
-            <img src="file:///C:/Users/JEEL/PycharmProjects/MonProject/media/images/logo jeoline.PNG" alt="Logo" width="30%">
-
+            <img src="file:///C:/Users/JEEL/PycharmProjects/MonProject/media/images/logo jeoline.PNG" alt="Logo">
             <h1>Devis N° 00{{ devis.pk }}</h1>
-            <p>Douala le {{ devis.date_creation }}</p>
+            <p>Douala, le {{ devis.date_creation }}</p>
         </header>
 
-        <section class="company-info">
-            <h2>Entreprise : Jeoline Corporates</h2>
-            <p>Email : contact@jeolinecorporates.com</p>
-            <p>Téléphone : +237 652 21 41 51</p>
-            <p>Adresse : 264 Rue de la Motte-Picquet Bonanjo, Douala, Cameroun</p>
-        </section>
+        <div class="PART">
+            <section class="company-info">
+                <h2>Prestataire</h2>
+                <p><strong>Jeoline Corporates</strong></p>
+                <p>Email : contact@jeolinecorporates.com</p>
+                <p>Téléphone : +237 652 21 41 51</p>
+                <p>Adresse : 264 Rue de la Motte-Picquet Bonanjo, Douala, Cameroun</p>
+            </section>
 
-        <section class="client-info">
-            <h2>Informations du client</h2>
-            <p>Nom : {{ devis.demande.client.username }}</p>
-            <p>Email : {{ devis.demande.client.email }}</p>
-            <p>Valide jusqu'au : {{ devis.validite }}</p>
-        </section>
+            <section class="client-info">
+                <h2>Client</h2>
+                <p><strong>Nom :</strong> {{ devis.demande.client.username }}</p>
+                <p><strong>Email :</strong> {{ devis.demande.client.email }}</p>
+                <p><strong>Invalide dans :</strong> {{ devis.validite }} jours</p>
+            </section>
+        </div>
 
         <section class="project-info">
-            <h2>Détails de la prestation</h2>
+            <h2>Détails du projet</h2>
             <p><strong>Description :</strong> {{ devis.description }}</p>
-            <p><strong>Durée estimée :</strong> {{ devis.duree }} jours</p>
+            <p><strong>Durée de réalisation :</strong> {{ devis.duree }} jours</p>
         </section>
 
         <section class="pricing">
@@ -85,53 +152,27 @@
             <table>
                 <tr>
                     <th>Description</th>
-                    <th>Coût (FCFA)</th>
+                    <th>Montant (FCFA)</th>
                 </tr>
-                <tr>
-                    <td>Développement Backend</td>
-                    <td>{{ devis.cout_backend }}</td>
-                </tr>
-                <tr>
-                    <td>Développement Frontend</td>
-                    <td>{{ devis.cout_frontend }}</td>
-                </tr>
-                <tr>
-                    <td>Tests et validation</td>
-                    <td>{{ devis.cout_test }}</td>
-                </tr>
-                <tr>
-                    <td>Maintenance</td>
-                    <td>{{ devis.cout_maintenance }}</td>
-                </tr>
+                <tr><td>Développement Backend</td><td>{{ devis.cout_backend }}</td></tr>
+                <tr><td>Développement Frontend</td><td>{{ devis.cout_frontend }}</td></tr>
+                <tr><td>Tests et validation</td><td>{{ devis.cout_test }}</td></tr>
+                <tr><td>Maintenance / an</td><td>{{ devis.cout_maintenance }}</td></tr>
                 {% if devis.cout_hebergement %}
-                <tr>
-                    <td>Hébergement</td>
-                    <td>{{ devis.cout_hebergement }}</td>
-                </tr>
+                    <tr><td>Hébergement</td><td>{{ devis.cout_hebergement }}</td></tr>
                 {% endif %}
                 {% if devis.cout_nom_de_domaine %}
-                <tr>
-                    <td>Nom de domaine</td>
-                    <td>{{ devis.cout_nom_de_domaine }}</td>
-                </tr>
+                    <tr><td>Nom de domaine</td><td>{{ devis.cout_nom_de_domaine }}</td></tr>
                 {% endif %}
-                <tr>
-                    <td><strong>Total HT</strong></td>
-                    <td><strong>{{ devis.calcul_total_ht|floatformat:2 }} FCFA</strong></td>
-                </tr>
-                <tr>
-                    <td>TVA (20%)</td>
-                    <td>{{ devis.calcul_tva }} FCFA</td>
-                </tr>
-                <tr>
-                    <td><strong>Total TTC</strong></td>
-                    <td><strong>{{ devis.calcul_total_ttc|floatformat:2 }} FCFA</strong></td>
-                </tr>
+                <tr><td>Formation à l'utilisation (gratuite)</td><td>0,00</td></tr>
+                <tr><td>Total HT</td><td>{{ devis.calcul_total_ht|floatformat:2 }}</td></tr>
+                <tr><td>TVA (20%)</td><td>{{ devis.calcul_tva }}</td></tr>
+                <tr><td><strong>Total TTC</strong></td><td><strong>{{ devis.calcul_total_ttc|floatformat:2 }}</strong></td></tr>
             </table>
         </section>
 
         <footer>
-            <p> JEOLINE CORPORATES-societe prestataire au capital de 10 000 000 FCFA .</p>
+            <p>JEOLINE CORPORATES - Société prestataire au capital de 1 000 000 FCFA.</p>
         </footer>
     </div>
 </body>

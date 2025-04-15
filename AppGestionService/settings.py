@@ -17,7 +17,7 @@ from .info import *
 
  #######################################################
 
-EMAIL_USE_TLS = EMAIL_USE_TLS
+EMAIL_USE_TLS = EMAIL_USE_TLS # preciser si le serveur de messagerie doit utiliser le protocole (Transport Layer Security)
 EMAIL_HOST = EMAIL_HOST
 EMAIL_HOST_USER = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
@@ -36,7 +36,7 @@ LOGIN_URL = 'login' #l'URL vers laquelle un utilisateur non authentifié
 LOGIN_REDIRECT_URL = 'home'  #l'URL vers laquelle l'utilisateur sera redirigé après une connexion réussie
 LOGOUT_REDIRECT_URL = 'login' #  l'URL vers laquelle l'utilisateur sera redirigé après s'être déconnecté
 
-# LOGS POUR VOIR LES ERREURS D'ENVOIR D'EMAIL ####################################
+# LOGS POUR VOIR LES ERREURS D'ENVOIR D'EMAIL  ####################################
 
 LOGGING = {
     'version': 1,
@@ -161,7 +161,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-FR'
 
 TIME_ZONE = 'UTC'
 
@@ -179,7 +179,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static/'] # pour le developpement
 STATIC_ROOT = BASE_DIR / 'staticfiles'  # Dossier où Django collectera les fichiers statiques pour le deploiement
 
 MEDIA_URL = "/media/" # utiliser pour accerder aux fichiers uploades
-MEDIA_ROOT = BASE_DIR/"media" # Chemin absolu où Django stocke les fichiers uploadés(images) par les utilisateurs.
+MEDIA_ROOT = BASE_DIR / "media" # Chemin absolu où Django stocke les fichiers uploadés(images) par les utilisateurs.
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

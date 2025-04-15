@@ -104,64 +104,72 @@ class AdminDemandeService(admin.ModelAdmin):
 ###############################################################################################################
 ###############################################################################################################
 class AdminFacture(admin.ModelAdmin):
-    list_display = ('devis' ,'get_client', 'get_service', 'date_creation','statut','bouton_generer_facture')
+    list_display = ('devis', 'get_client', 'get_service', 'date_creation', 'statut', 'bouton_generer_facture')
     list_filter = ('statut', 'devis')
     readonly_fields = ('date_creation',)
-    actions = ['generer_pdf','resend_devis_email']
+    actions = ['generer_pdf', 'resend_devis_email']
 
-
+    # Fonction pour afficher le client associé à la facture
     def get_client(self, obj):
         return obj.get_client()
     get_client.short_description = "Client"
 
+    # Fonction pour afficher le service associé à la facture
     def get_service(self, obj):
         return obj.get_service()
     get_service.short_description = "Service"
-#
+
+    # Ajout d'un bouton dans l'admin pour générer le PDF de la facture
     def bouton_generer_facture(self, obj):
         """Ajoute un bouton pour générer la facture en PDF directement depuis l'admin."""
         if obj.pk:  # Vérifie que la facture a bien un ID
             url = reverse("facture_pdf", args=[obj.pk])  # Génère l'URL vers la vue de génération PDF
-
-            # format_html() est utilisé pour afficher un bouton cliquable.
+            # Utilise format_html pour afficher un bouton cliquable dans l'interface admin
             return format_html('<a class="button" href="{}" target="_blank">📄 Générer PDF</a>', url)
-        return "Pas de facture"
+        return "Pas de facture"  # Affiche un message si la facture n'est pas encore générée
 
     bouton_generer_facture.short_description = "Générer la facture PDF"
 
+    # Action personnalisée dans l'admin pour générer les factures PDF
     def generer_pdf(self, request, queryset):
         """Générer les factures PDF pour les factures sélectionnées."""
-        for facture in queryset:
-            facture.generate_pdf() # appele de la fonction qui genere la facture
-        self.message_user(request, "Factures générées avec succès.")
+        try:
+            for facture in queryset:
+                # Appel de la fonction qui génère le PDF de chaque facture sélectionnée
+                if not facture.generate_pdf():  # Si la génération échoue
+                    raise Exception(f"Échec de la génération du PDF pour la facture {facture.pk}")
+            # Message de succès si tout se passe bien
+            self.message_user(request, "Factures générées avec succès.", level=messages.SUCCESS)
+        except Exception as e:
+            # Si une erreur se produit pendant la génération, on l'attrape et on l'affiche
+            self.message_user(request, f"❌ Erreur lors de la génération des factures : {str(e)}", level=messages.ERROR)
 
     generer_pdf.short_description = "Générer les factures PDF"
 
     ###########################################################
     @admin.action(description="📤 Renvoyer la facture par e-mail au client")
     def resend_devis_email(self, request, queryset):
-        for facture in queryset: # queryset : la liste des devis sélectionnés par l’admin dans l’interface
+        """Renvoyer la facture par e-mail au client."""
+        for facture in queryset:  # On boucle sur chaque facture sélectionnée par l'admin
             try:
                 client = facture.devis.demande.client
                 service_nom = facture.devis.demande.service.nom if facture.devis.demande.service else "service inconnu"
-                lien = request.build_absolute_uri(facture.fichier.url) #crée un lien complet (URL absolue) vers le fichier PDF du devis.
+                # Crée une URL absolue vers le fichier PDF de la facture
+                lien = request.build_absolute_uri(facture.fichier.url)
 
+                # Envoie l'email avec le lien vers le PDF de la facture
                 send_mail(
                     subject='Rappel : votre facture',
-                    message=f"""Bonjour {client.username},
-
-    Voici le lien pour consulter ou télécharger votre facture pour le service : {service_nom} :
-    {lien}
-
-    Merci de votre confiance !""",
+                    message=f"""Bonjour {client.username},\n\nVoici le lien pour consulter ou télécharger votre facture pour le service : {service_nom} :\n{lien}\n\nMerci de votre confiance !""",
                     from_email=settings.ADMIN_EMAIL,
                     recipient_list=[client.email],
-                    fail_silently=False,
+                    fail_silently=False,  # Si l'envoi échoue, une exception sera levée
                 )
-                messages.success(request, f"📧 Facture renvoyé à {client.email}")
+                # Message de succès si l'email a été envoyé avec succès
+                messages.success(request, f"📧 Facture renvoyée à {client.email}")
             except Exception as e:
+                # Si une erreur survient pendant l'envoi de l'email, on la capture et on affiche un message d'erreur
                 messages.error(request, f"❌ Erreur pour {facture}: {str(e)}")
-
 #########################################################################################################
 ###########################################################################################################
 from django.urls import reverse

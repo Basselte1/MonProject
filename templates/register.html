@@ -1,10 +1,9 @@
-{% extends 'base.html' %}
+
 
 {% block register %}  
 {% endblock %}
 
 {% block content %}
-<h1>Inscription</h1>
 
 <!-- Messages de succès ou d'erreur -->
 <div id="alert-container">
@@ -19,25 +18,104 @@
 </div>
 
 <style>
-  form{
-    padding: 30px;
-    margin: auto;
-     width: 100%;
-    max-width: 430px;
-}
+     body {
+             font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f7f7f7;
+        }
 
-form label {
-    display: block;
-    font-weight: bold;
-  }
+        .container {
+             width: 100%;
+            max-width: 1200px;
+            height: 600px;
+            display: flex;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden; /* Ensure rounded corners work */
+        }
 
-   form input, form textarea {
-    width: 95%;
-    padding: 10px;
-    margin-bottom: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 12px;
+        .contact-section {
+            width: 90%;
+            flex: 1;
+            padding: 30px;
+            background-color: #fff;
+        }
+
+        .image-section {
+            flex: 1;
+            background-image: url("/media/images/formulaire-inscription.avif") ; /* Remplacez par l'URL de votre image */
+            background-size: cover;
+            background-position: center;
+            margin-top: 10px;
+            margin-left:-80px;
+        }
+
+        .logo {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #777;
+            font-size: 15px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            margin-right: 55px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color:rgb(85, 84, 84);
+        }
+
+        input{
+            width: 350px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            font-size: 1em;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #0d6efd;
+            margin-left:80px;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 500px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+
+        }
+
+        button:hover {
+            background-color: #0058dc;
+        }
 
   /* Style de base pour les alertes */
   #alert-container {
@@ -98,37 +176,116 @@ form label {
     color: white;
   }
 
+  .flex{
+    display: flex;
+    justify-content: center;
+    margin-right: 20px;
+  }
+  .tete{
+    display:flex;
+    justify-content: space-between;
+    text-align: center;
+  }
+  .lien{
+    margin: 20px;
+  }
+  .bt {
+        margin-bottom:575px;
+        margin-right:10px;
+        border-radius: 15px;
+        margin-left:5px;
+    }
+    .bt a {
+        background:#323131;
+        padding:5px;
+        border-radius: 5px;
+        text-decoration:none;
+        color:#fff;
+    }
+    .bt a:hover {
+         background:#5a5a5a;
+
+        }
+
 </style>
+
+<div class="bt">
+    <a href="{% url 'home' %}" class="tete" > Retour</a></div>
+
+<div class="container">
+    <div class="contact-section">
+       <div class="tete">
+      <a href="{% url 'home' %}"><img src="/media/images/logo jeoline.PNG" alt="Image description" class="logo"></a>
+           <h3>Hello Bienvenue! 🆕</h3> <br>
+       </div>
+
+        <h2 style="margin-top:-10px;">Inscription📝</h2>
+
 
 <!-- Formulaire d'inscription -->
 <form method="POST" action="{% url 'register' %}" class="formulaire">
   {% csrf_token %}
-  <label for="username">Username :</label>
-  <input type="text" id="username" name="username" placeholder="Votre Nom complet" required>
-  <br><br>
 
+  <div class="flex">
+
+   <div class="form-group">
+  <label for="username">Nom :</label>
+  <input type="text" id="username" name="username" placeholder="Votre Nom complet" required>
+  <br>
+   </div>
+
+   <div class="form-group">
   <label for="email">Email :</label>
   <input type="email" id="email" name="email" placeholder="Email" required>
-  <br><br>
+  <br>
+   </div>
+  </div>
 
+  <div class="flex">
+
+   <div class="form-group">
   <label for="adresse">Adresse :</label>
   <input type="text" id="adresse" name="adresse" placeholder="Votre Adresse complete" required>
   <br><br>
+   </div>
 
-  <label for="entreprise">Entreprise :</label>
-  <input type="text" id="entreprise" name="entreprise" placeholder="nom de votre *Entreprise* ou  simplement *particulier* ">
-  <br><br>
 
+
+   <div class="form-group">
+  <label for="entreprise">Entreprise : *optionnel</label>
+  <input type="text" id="entreprise" name="entreprise" placeholder="nom de votre *Entreprise* ou *particulier* ">
+  <br>
+   </div>
+  </div>
+
+  <div class="flex">
+
+   <div class="form-group">
   <label for="password1">Mot de passe :</label>
   <input type="password" id="password1" name="password1" placeholder="votre Mot de passe" required>
-  <br><br>
+  <br>
+   </div>
 
+   <div class="form-group">
   <label for="password2">Confirmer le mot de passe :</label>
   <input type="password" id="password2" name="password2" placeholder="Confirmer mot de passe" required>
   <br><br>
+   </div>
+
+  </div>
 
   <button type="submit">S'inscrire</button>
+
+  <div class="lien">
+    avez-vous deja de compte ? <a href="{% url 'login' %}">Se connecter</a></div>
 </form>
+      <div class="space">
+
+      </div>
+
+    </div>
+   <div class="image-section"></div>
+    </div>
 {% endblock %}
 
 {% block footer %}  {% endblock %}

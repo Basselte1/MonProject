@@ -1,29 +1,164 @@
-{% extends 'base.html' %}
+
 
 
 {% block login %}    {% endblock %}
 {% block content %}
-<h1>Connexion</h1>
 
-<!-- Affichage des messages d'erreur -->
+
+<style xmlns="http://www.w3.org/1999/html">
+    body {
+       font-family: Arial, sans-serif;
+       margin: 0;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       min-height: 100vh;
+       background-color: #f7f7f7;
+        }
+
+        .container {
+             width: 80%;
+            max-width: 900px;
+            display: flex;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden; /* Ensure rounded corners work */
+        }
+
+        .contact-section {
+            flex: 1;
+            padding: 30px;
+            background-color: #fff;
+        }
+
+        .image-section {
+            flex: 1;
+            background-image: url("/media/images/3.jpg") ; /* Remplacez par l'URL de votre image */
+            background-size: cover;
+            background-position: center;
+            margin-top: 10px;
+        }
+
+        .logo {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        p {
+            color: #777;
+            font-size: 15px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            font-size: 1em;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 120px;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #0d6efd;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0058dc;
+        }
+    .sms {
+       display:flex;
+       align-items:center;
+       margin-bottom:20px;
+       color:#54f05c;
+       font-size: 1.1em;
+       font-weight: bold;
+       border-radius: 5px;
+
+    }
+    .bt {
+        margin-bottom:550px;
+        margin-right:40px;
+        border-radius: 15px;
+        margin-left:-190px;
+    }
+    .bt a {
+      background:#323131;
+        padding:5px;
+        border-radius: 5px;
+        text-decoration:none;
+        color:#fff;
+    }
+     .bt a:hover {
+             background:#5a5a5a;
+
+        }
+
+</style>
+<div class="bt">
+    <a href="{% url 'home' %}" class="tete" > Retour</a></div>
+<div class="container">
+    <div class="contact-section">
+        <a href="{% url 'home' %}"><img src="/media/images/logo jeoline.PNG" alt="Image description" class="logo"></a>
+        <h2>Connexion</h2>
+        <p>Bienvenu ! 😃</p>
+         <!-- Affichage des messages d'erreur -->
 {% if messages %}
   {% for message in messages %}
-    <div style="color: bleu;">
+    <div class="sms">
       {{ message }}
     </div>
   {% endfor %}
 {% endif %}
 
 <!-- Formulaire de connexion -->
-<form method="POST" action="{% url 'login' %}">
+    <form id="contact-form" method="POST" action="{% url 'login' %}">
     {% csrf_token %} <!-- Protection CSRF -->
 
-
+    <div class="form-group">
     <label for="username">Votre Nom :</label>
-    <input type="text" id="username" name="username" placeholder="Votre nom d'utilisateur" required> <br> <br>
-
-    <label for="password">Votre Mot de passe :</label>
-    <input type="password" id="password" name="password" placeholder="Votre mot de passe" required><br> <br>
+    <input type="text" id="username" name="username" placeholder="Votre nom d'utilisateur" required> <br>
+    </div>
+        <div class="form-group">
+            <label for="password">Votre Mot de passe :</label>
+        <input type="password" id="password" name="password" placeholder="Votre mot de passe" required> <br> <br>
+        </div>
 
     <button type="submit">Se connecter</button>
     <p><a href="{% url 'reset_password' %}">Mot de passe oublié ?</a></p>
@@ -31,6 +166,9 @@
     <p>Vous n'avez pas de compte ? <a href="{% url 'register' %}">S'inscrire</a></p>
 
 </form>
+    </div>
+    <div class="image-section"></div>
+</div>
 
 {% block footer %}  {%  endblock  %}
 

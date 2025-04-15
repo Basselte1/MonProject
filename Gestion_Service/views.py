@@ -40,7 +40,6 @@ def devis_form(request):
         email=request.POST.get("email")
         adresse=request.POST.get("adresse")
 
-
         # Construction du message pour l'email
         message_admin = f"""
                📌 Nouvelle demande de devis :
@@ -382,7 +381,7 @@ def generate_devis_pdf(request, demande_id):  #http://127.0.0.1:8000/devis/gener
     print("URL du fichier:", devis.fichier.url)  # URL publique
 
     # envoyer email à l'utilisateur correspondant
-
+    client= devis.demande.client.username
     if devis.demande:
         service_nom = devis.demande.service.nom
     else:
@@ -390,9 +389,9 @@ def generate_devis_pdf(request, demande_id):  #http://127.0.0.1:8000/devis/gener
     try:
         send_mail(
             subject='devis envoye',
-            message=f"""Votre devis pour un {service_nom} a ete envoyer.
-            Vous pouvez le telechage en cliquant sur ce lien :  {request.build_absolute_uri(devis.fichier.url)}
-            ou Veuillez vous connectez pour le voir.
+            message=f""" Bonjour Monsieur {client} ! Votre devis pour {service_nom} est disponible.
+            Vous pouvez l'obtenir en cliquant sur ce lien :  {request.build_absolute_uri(devis.fichier.url)}
+            en cas de probleme, Veuillez vous connectez sur la plateforme et le télécharge.
                     Merci de votre confiance ! """,
             from_email=settings.ADMIN_EMAIL,
             recipient_list=[demande.client.email],
@@ -461,7 +460,7 @@ def valider_devis(request, devis_id):
     message = f"""
         Bonjour Admin,
 
-        Le client {devis.demande.client.username} a validé un devis.
+        Le client {devis.demande.client.username} a confirme la validation du devis.
 
         Détails du devis :
         - ID : {devis.id}
@@ -471,112 +470,143 @@ def valider_devis(request, devis_id):
         """
     send_mail(subject, message, {devis.demande.client.email}, [settings.ADMIN_EMAIL])
 
-    messages.success(request,'votre devis a ete valide avec success. ')
+    messages.success(request,'devis valide avec success ! La facture sera disponible dans quelque instant. ')
     return redirect('client_dashbord')  # Rediriger après validation
 
 
 ###############################3###########################
 #GENERER LA FACTURE
-@login_required
+@login_required  # Vérifie que l'utilisateur est connecté
 def facture_pdf_view(request, facture_id):
-    """Affiche une facture existante et envoie un email si elle est validée."""
+    """
+    Affiche une facture au format PDF et envoie un email avec la facture en pièce jointe si elle est validée.
+    """
     try:
-        # Récupérer la facture
+        # Récupère la facture avec l'ID donné, ou affiche une page 404 si elle n'existe pas
         facture = get_object_or_404(Facture, pk=facture_id)
 
-        # Générer le PDF si nécessaire
+        # Génère le PDF si le fichier est absent ou introuvable sur le disque
         if not facture.fichier_pdf or not os.path.exists(facture.fichier_pdf.path):
-            if not facture.generate_pdf():
-                return HttpResponse("Erreur lors de la génération du PDF.", status=500)
+            if not facture.generate_pdf():  # Méthode de ton modèle pour créer le PDF
+                return HttpResponse("Une erreur est survenue lors de la génération de votre facture.", status=500)
 
-        # Ouvrir le fichier PDF
-        with open(facture.fichier_pdf.path, 'rb') as pdf_file:
-            pdf_content = pdf_file.read()
+        # Lecture du contenu du fichier PDF
+        try:
+            with open(facture.fichier_pdf.path, 'rb') as pdf_file:
+                pdf_content = pdf_file.read()
+        except Exception as e:
+            print(f"❌ Impossible de lire le fichier PDF : {e}")
+            return HttpResponse("Le fichier de la facture est temporairement inaccessible.", status=500)
 
-        # Vérifier si la facture est validée et envoyer un email
+        # Envoi d’un email si le devis lié est VALIDÉ
         if facture.devis and facture.devis.statut == 'VALIDÉ':
-            client = facture.get_client()
-            service = facture.get_service()
+            client = facture.get_client()       # Récupère l'utilisateur client
+            service = facture.get_service()     # Récupère le service concerné
+            client_email = getattr(client, 'email', None)  # Sécurité : récupère l'email si existe
 
-            client_email = client.email if client else None
-            service_nom = service.nom if service else "Service inconnu"
-
-            if client_email:  # Vérification si l'email existe
+            if client_email:
                 try:
+                    # Création de l’email avec pièce jointe (facture)
                     email = EmailMessage(
                         subject="Votre facture est disponible",
                         body=f"Bonjour {client.username},\n\n"
-                             f"Votre devis pour le service '{service_nom}' a été validé.\n"
-                             f"Votre facture est maintenant disponible dans votre espace client.\n\n"
-                             f"Cordialement,\nL'équipe de gestion.",
+                             f"Votre devis pour le service '{getattr(service, 'nom', 'Service inconnu')}' a été validé.\n"
+                             f"Vous pouvez consulter votre facture dans votre espace client.\n\n"
+                             f"Cordialement,\nL'équipe JEOLINE CORPORATES.",
                         from_email=settings.ADMIN_EMAIL,
                         to=[client_email],
                     )
-                    email.attach(
-                        filename=f"{facture.numero_facture or facture.pk}.pdf",
-                        content=pdf_content,
-                        mimetype="application/pdf"
-                    )
-                    email.send(fail_silently=False)
-                    print(f"✅ Email avec facture envoyé à {client_email}")
+                    email.attach(f"{facture.numero_facture or facture.pk}.pdf", pdf_content, "application/pdf")
+                    email.send(fail_silently=False)  # Envoi réel de l’email
+                    print(f"✅ Facture envoyée à {client_email}")
                 except Exception as e:
-                    print(f"❌ Erreur lors de l'envoi de l'email : {e}")
+                    print(f"❌ Erreur envoi email : {e}")
 
-        # Retourner le PDF
+        # Renvoie le PDF directement dans le navigateur
         response = HttpResponse(pdf_content, content_type='application/pdf')
         response['Content-Disposition'] = f'inline; filename="{facture.numero_facture or facture.pk}.pdf"'
         return response
 
+    # Si l’objet n’existe pas
     except ObjectDoesNotExist:
-        return HttpResponse("Facture introuvable.", status=404)
+        return HttpResponse("Cette facture est introuvable.", status=404)
 
+    # Erreur non prévue
     except Exception as e:
-        print(f"❌ Erreur générale : {e}")
-        return HttpResponse("Erreur interne du serveur.", status=500)
+        print(f"❌ Erreur inattendue dans facture_pdf_view : {e}")
+        return HttpResponse("Erreur serveur. Veuillez réessayer plus tard.", status=500)
+
 
 #############################################################
 # telechargement  de la facture
 
-@login_required
+@login_required  # L'utilisateur doit être connecté
 def telecharger_facture(request, facture_id):
-    """Permet au client de télécharger une facture en PDF."""
+    """
+    Permet au client connecté de télécharger sa facture au format PDF.
+    """
+    # Récupère la facture ou affiche une 404
     facture = get_object_or_404(Facture, pk=facture_id)
 
-    # Vérifier si la facture appartient bien au client connecté
-    if facture.devis and facture.devis.demande.client != request.user:
-        return HttpResponse("Accès refusé : cette facture ne vous appartient pas.", status=403)
+    # Vérifie que le client est bien le propriétaire de la facture
+    if not facture.devis or facture.devis.demande.client != request.user:
+        return HttpResponse("Accès refusé. Cette facture ne vous appartient pas.", status=403)
 
-    # Vérifier si le fichier PDF existe
+    # Vérifie que le fichier PDF est bien présent sur le serveur
     if not facture.fichier_pdf or not os.path.exists(facture.fichier_pdf.path):
-        return HttpResponse("Facture non disponible", status=404)
+        return HttpResponse("La facture n'est pas encore disponible. Veuillez réessayer plus tard.", status=404)
 
-    # Ouvrir et retourner le fichier PDF en téléchargement
+    # Envoie le fichier PDF en pièce jointe à télécharger
     try:
         response = FileResponse(facture.fichier_pdf.open('rb'), content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{facture.numero_facture or facture.pk}.pdf"'
         return response
     except Exception as e:
-        print(f"❌ Erreur lors de l'ouverture du fichier PDF : {e}")
-        return HttpResponse("Erreur lors du téléchargement de la facture.", status=500)
+        print(f"❌ Erreur lors du téléchargement du fichier PDF : {e}")
+        return HttpResponse("Une erreur est survenue pendant le téléchargement.", status=500)
 
 ################################################################################################3
 # permettre a l'utilisateur de voir la facture
 
-@login_required
+@login_required  # L'utilisateur doit être connecté
 def voir_facture(request, statut):
     """
-    Affiche les devis de l'utilisateur en fonction de leur statut (EN_ATTENTE, VALIDÉ, REFUSÉ)
+    Affiche la liste des factures de l'utilisateur selon un statut (EN_ATTENTE, VALIDÉ, REFUSÉ).
     """
-    user = request.user
+    STATUTS_VALIDES = ['EN_ATTENTE', 'VALIDÉ', 'REFUSÉ']
 
-    # Filtrage des devis par utilisateur et statut
-    # On utilise le modèle Devis pour récupérer tous les devis qui correspondent à deux critères (le client associe a la demande et le statut)
-    facture_list = Facture.objects.filter(devis__demande__client=user, statut=statut )
+    # Vérifie que le statut demandé est correct
+    if statut not in STATUTS_VALIDES:
+        return HttpResponse("Statut invalide.", status=400)
 
-    for facture in facture_list:
-        print(f"🔍 Facture {facture.numero_facture} - Fichier PDF : {facture.fichier_pdf}")  # Debug
+    user = request.user  # Récupère l'utilisateur connecté
 
-    # fonction "render" pour afficher un template HTML (devis/voir_devis.html) en lui passant un contexte (un dictionnaire de données).
+    # Récupère les factures liées à l'utilisateur avec le bon statut
+    facture_list = Facture.objects.filter(devis__demande__client=user, statut=statut)
 
-    return render(request, 'factures/liste_facture.html', {'facture_list': facture_list, 'statut': statut})
+    # Optionnel : message si aucune facture trouvée
+    if not facture_list.exists():
+        message = "Aucune facture trouvée pour ce statut."
+    else:
+        message = None
+
+    # Affiche le template HTML avec la liste des factures
+    return render(request, 'factures/liste_facture.html', {
+        'facture_list': facture_list,
+        'statut': statut,
+        'message': message
+    })
+
+#################################################################################################
+
+'''from django.shortcuts import render
+
+def carte_vue(request):
+    # Exemple : coordonnées d’Abidjan
+    context = {
+        'latitude': 5.3489,
+        'longitude': -4.0031
+    }
+    return render(request, 'carte.html', context)'''
+
 

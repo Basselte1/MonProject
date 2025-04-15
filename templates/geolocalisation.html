@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Localisation sur la carte</h2>
+
+<!-- 🔗 Feuilles de style et JS de Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<!-- 🌍 Zone d'affichage de la carte -->
+<div id="map" style="height: 400px; width: 100%; border: 1px solid #ccc;"></div>
+
+<script>
+    // 🔄 Coordonnées transmises depuis Django
+    var lat = {{ latitude }};
+    var lon = {{ longitude }};
+
+    // 🗺️ Initialisation de la carte
+    var map = L.map('map').setView([lat, lon], 13);
+
+    // 🧩 Ajout des tuiles OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // 📌 Marqueur
+    L.marker([lat, lon]).addTo(map)
+        .bindPopup('Localisation actuelle')
+        .openPopup();
+</script>
+{% endblock %}

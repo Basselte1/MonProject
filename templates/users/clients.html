@@ -1,31 +1,51 @@
-{% extends 'base.html' %}
-
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--linking font Awesome for icons-->
+    <title>Acceuil</title>
+</head>
 {% block mon_compte %}
-    <button class="btn"><a href="{% url 'devis_form' %}" style="color: white; text-decoration: none;">Demander un service</a></button>
 
 {% endblock %}
 
-{% block content %}
-<h1>Bienvenue, {{ user.username }} - {{ client.entreprise }}</h1>
-
-<!-- Affichage des messages de succès -->
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">
-            <p style="color: {% if message.tags == 'success' %} green {% else %} red {% endif %};">
-            {{ message }}
-            </p>
-        </div>
-    {% endfor %}
-{% endif %}
+{% block content %} {% endblock %}
 
 <style>
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    height: 100vh;
+     overflow:hidden;
+
+}
+
+.corps{
+    display:inline-block;
+}
+
+.logout{
+    background-color: #5a3a3a;
+    cursor: pointer;
+    margin: 10px 0;
+    padding: 10px;
+    display: block;
+    /*background-color: #444;*/
+    border-radius: 5px;
+    text-align: center;
+    color: #fff;
+
+}
+.logout:hover{
+    background-color:#a96565;
+    border-radius:5px;
+
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
 }
 
 .dashboard {
@@ -71,6 +91,7 @@ ul :hover {
     flex: 1;
     padding: 30px;
     background-color: #f4f4f4;
+
 }
 
 .content-section {
@@ -172,27 +193,180 @@ span {
     color:#000;
 }
 
+    .formulaire {
+        width: 100%;
+        max-width: 450px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+        display: flex;
+        justify-content: center;
+    }
 
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input, textarea, select, button {
+        width: 95%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #007bff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Style de la boîte modale */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        width: 350px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-content button {
+        margin: 10px;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .heure {
+    display:flex;
+    justify-content:right;
+    margin-bottom:-20px;
+    font-weight:bold;
+     color: blue; /*  #6c757d */
+}
+    .form {
+        width:920px;
+        height: -90px;
+        margin-top:-45px;
+        display:flex;
+        justify-content:center;
+    }
+    .tete {
+        display:flex;
+        justify-content:space-between;
+        margin-top:-20px;
+    }
+    .tete .im {
+        margin-left:120px;
+      margin-top:10px;
+      margin-bottom:-25px
+    }
+    .bt {
+        font-size:20px;
+        color: #5275b9;
+        background:#a1a2a4;
+        border-radius:10px;
+        padding:10px;
+        margin-right:10px;
+        text-decoration:none;
+    }
 
 </style>
-
 <body>
- <button id="menu-toggle" class="btn">☰</button>
+
+<div class="corps">
+
+<div class="header">
+    <!-- Affichage des messages de succès -->
+        {% if messages %}
+            {% for message in messages %}
+                <!--div class="alert alert-{{ message.tags }}"-->
+                    <p style="color: {% if message.tags == 'success' %} green {% else %} red {% endif %};" class="heure-{{ message.tags }}">
+                    {{ message }}
+                    </p>
+                <!--/div-->
+            {% endfor %}
+        {% endif %}
+    <div class="tete">
+        <h1 class="H1"><a href="{% url 'home' %}" class="bt"><-Retour</a>
+            <a href="{% url 'home' %}" style="text-decoration:none;"> Bienvenue, {{ user.username|upper }} dans notre structure Jeoline Corporates</a>
+            <img src="../media/images/user.png" alt="logo" style="width:50px;" class="im"></h1>
+    </div>
+
+
+ <button id="menu-toggle" class="btn"> ☰ </button>
+</div>
+
     <div class="dashboard">
         <aside class="sidebar">
             <ul>
-                <li data-section="notification" class="sidebar-link">Notifications</li>
-                <li data-section="services" class="sidebar-link active">Mes demandes de services</li>
-                 <li data-section="devis" class="sidebar-link">Mes devis</li>
+                <li data-section="notification" class="sidebar-link">
+                    <a href="{% url 'contact_view' %}" style="text-decoration:none; color:#fff;">Contactez-nous</a></li>
+                <li data-section="services" class="sidebar-link active">Mes demandes </li>
+                <li data-section="devis" class="sidebar-link">Mes devis</li>
                 <li data-section="factures" class="sidebar-link">Mes factures</li>
-
+                <li data-section="demandes" class="sidebar-link"><a href="{% url 'devis_form' %}" style="text-decoration:none; color:#fff;">Demander un service</a></li>
+               <li data-section="deconnection"><a href="{% url 'logout' %}" style="text-decoration : none; "  class="logout">Deconnexion</a></li>
+    <!--class="logout"-->
             </ul>
         </aside>
 
         <main class="content">
 
                         <!-- Section Notifications -->
-            <section id="notification" class="content-section hidden">
+            <!--section id="notification" class="content-section hidden">
                 <div class="card">
                     <h5>Dernières notifications</h5>
                     <ul>
@@ -203,20 +377,23 @@ span {
                         {% endfor %}
                     </ul>
                 </div>
-            </section>
+            </section-->
 
             <!-- Section des demandes de service -->
             <section id="services" class="content-section">
+
                 <div class="card">
                     <h5>En attente</h5>
                      <p><span id="demandes_attente">{{ demandes_attente }}</span></p>
                     <a href="{% url 'voir_demandes_par_statut' 'EN_ATTENTE' %}" class="btn">Voir</a>
                 </div>
+
                  <div class="card">
                     <h5>Validees</h5>
                      <p><span id="demandes_validees">{{ demandes_validees }}</span></p>
                      <a href="{% url 'voir_demandes_par_statut' 'VALIDÉE' %}" class="btn">Voir</a>
                 </div>
+
                 <div class="card">
                     <h5>Refusees</h5>
                      <p><span id="demandes_refusees">{{ demandes_refusees }}</span></p>
@@ -232,11 +409,13 @@ span {
                    <p> <span id="factures_attente">{{ factures_attente }}</span></p>
                     <a href="{% url 'voir_facture' 'EN_ATTENTE' %}" class="btn">Voir</a>
                 </div>
+
                 <div class="card">
                     <h5>Factures impayées</h5>
                    <p> <span id="factures_impayees">{{ factures_impayees }}</span></p>
                     <a href="{% url 'voir_facture' 'IMPAYEE' %}" class="btn">Voir</a>
                 </div>
+
                 <div class="card">
                     <h5>Factures payées</h5>
                    <p><span id="factures_payees">{{ factures_payees }}</span></p>
@@ -246,16 +425,19 @@ span {
 
             <!-- section devis (fichiers)----------------------------------------->
             <section id="devis" class="content-section hidden">
+
                 <div class="card">
                     <h5>En attente</h5>
                      <p><span id="devis_attente">{{ devis_attente }}</span></p>
                      <a href="{% url 'voir_devis' 'EN_ATTENTE' %}" class="btn">Voir</a>
                 </div>
+
                 <div class="card">
                     <h5>Validée</h5>
                      <p><span id="devis_valides">{{ devis_valides }}</span></p>
                      <a href="{% url 'voir_devis' 'VALIDÉ' %}" class="btn">Voir</a>
                 </div>
+
                 <div class="card">
                     <h5>Refusée</h5>
                         <p> <span id="devis_refuses">{{ devis_refuses }}</span></p>
@@ -263,8 +445,25 @@ span {
                 </div>
             </section>
 
+             <div class="form">
+            <!-- section demande de service -->
+            <section id="demandes" class="content-section hidden">
+
+            </section>
+             </div>
         </main>
     </div>
+
+</div>
+
+ <!--footer>
+    <div class="footer-bottom">
+        <p>&copy; 2023 Jeoline Corporate. Tous droits réservés.</p>
+            Python manage.py runserver 2>$null demarer le serveur sans erreur
+            http://127.0.0.1:8000/devis/generer/20/ du devis dans la BD/
+        <p><a href="contact.html">Contactez-nous</a></p>
+    </div>
+</footer-->
 
     {% block footer %} {% endblock %}
 
@@ -346,12 +545,11 @@ setInterval(refreshDashboard, 3000);
 
 // Lancer l’actualisation
 const refreshInterval = setInterval(refreshDashboard, 3000);
-
-
     </script>
 
 <!--AJAX (Asynchronous JavaScript and XML) est une technologie qui permet d’envoyer et de recevoir
 des données depuis un serveur sans recharger la page.-->
 </body>
+</html>
 
-{% endblock %}
+

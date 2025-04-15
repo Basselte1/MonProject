@@ -1,4 +1,13 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--linking font Awesome for icons-->
+    <title>Acceuil</title>
+</head>
+<body>
+
 
 {% block entete %}   {% endblock %}
 {% block content %}
@@ -76,7 +85,7 @@ th {
 }
 
 </style>
- <a href="{% url 'dashboard' %}" class="btn" style="background-color:#000;">Retour</a>
+ <a href="{% url 'client_dashbord' %}" class="btn" style="background-color:#000;">Retour</a>
 <div class="container">
     <h2>Liste des demandes - {{ statut }}</h2>
 
@@ -85,7 +94,7 @@ th {
     <table id="demandesTable">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Numero</th>
                 <th>Date d'envoi</th>
                 <th>Fichier associé</th>
                 <th>Actions</th>
@@ -105,8 +114,14 @@ th {
                 </td>
                 <td>
                     {% if demande.statut == "EN_ATTENTE" %}
-                        <a href="{% url 'modifier_demande' demande.id %}" class="btn btn-warning">Modifier</a>
-                    {% elif demande.statut == "VALIDÉE" or demande.statut == "REFUSÉE" %}
+                        <!--a href="{% url 'modifier_demande' demande.id %}" class="btn btn-warning"--><a href="#" style="text-decoration:none;">aucune action possible "demande en-cour de traitement"</a>
+                    {% elif demande.statut == "VALIDÉE" %}
+                    <a href="#" style="text-decoration:none;">aucune action possible "demande deja de traite"</a>
+                        <!--a href="{% url 'modifier_demande' demande.id %}" class="btn btn-warning">Modifier</a>
+                        <a href="{% url 'modifier_demande' demande.id %}" class="btn btn-warning">voir le contenu</a>
+                        <a href="{% url 'supprimer_demande' demande.id %}" class="btn btn-danger" onclick="return confirmSuppression(event)">Supprimer</a-->
+
+                    {% elif demande.statut == "REFUSÉE" %}
                         <a href="{% url 'modifier_demande' demande.id %}" class="btn btn-warning">Modifier</a>
                         <a href="{% url 'supprimer_demande' demande.id %}" class="btn btn-danger" onclick="return confirmSuppression(event)">Supprimer</a>
                     {% endif %}
@@ -151,3 +166,6 @@ function filtrerDemandes() {
 }
 </script>
 {% endblock %}
+
+</body>
+</html>
